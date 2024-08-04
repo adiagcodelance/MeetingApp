@@ -7,12 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		811DC8172C5F036A00C1B01E /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8162C5F036A00C1B01E /* SideMenuView.swift */; };
 		811DC8182C5F036A00C1B01E /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8162C5F036A00C1B01E /* SideMenuView.swift */; };
 		811DC8192C5F036A00C1B01E /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8162C5F036A00C1B01E /* SideMenuView.swift */; };
 		811DC81F2C5FEDD100C1B01E /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 811DC81E2C5FEDD100C1B01E /* Media.xcassets */; };
 		811DC8202C5FEDD100C1B01E /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 811DC81E2C5FEDD100C1B01E /* Media.xcassets */; };
 		811DC8212C5FEDD100C1B01E /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 811DC81E2C5FEDD100C1B01E /* Media.xcassets */; };
+		811DC8222C5FF59A00C1B01E /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8162C5F036A00C1B01E /* SideMenuView.swift */; };
+		811DC8382C60259D00C1B01E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8372C60259D00C1B01E /* SettingsView.swift */; };
+		811DC8392C60259D00C1B01E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8372C60259D00C1B01E /* SettingsView.swift */; };
+		811DC83A2C60259D00C1B01E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8372C60259D00C1B01E /* SettingsView.swift */; };
+		811DC83C2C6025F400C1B01E /* ThemeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC83B2C6025F400C1B01E /* ThemeListView.swift */; };
+		811DC83D2C6025F400C1B01E /* ThemeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC83B2C6025F400C1B01E /* ThemeListView.swift */; };
+		811DC83E2C6025F400C1B01E /* ThemeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC83B2C6025F400C1B01E /* ThemeListView.swift */; };
 		81B94D042C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
 		81B94D052C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
 		81B94D062C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
@@ -62,6 +68,8 @@
 /* Begin PBXFileReference section */
 		811DC8162C5F036A00C1B01E /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
 		811DC81E2C5FEDD100C1B01E /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		811DC8372C60259D00C1B01E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		811DC83B2C6025F400C1B01E /* ThemeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeListView.swift; sourceTree = "<group>"; };
 		81B94D032C5D184D009D2ED5 /* SetupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFormView.swift; sourceTree = "<group>"; };
 		81B94D072C5D40FF009D2ED5 /* HomeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeListView.swift; sourceTree = "<group>"; };
 		81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteStore.swift; sourceTree = "<group>"; };
@@ -138,6 +146,8 @@
 				81B94D032C5D184D009D2ED5 /* SetupFormView.swift */,
 				81F10BF82C5C5A9D0030631B /* SwiftUIView.swift */,
 				81B94D072C5D40FF009D2ED5 /* HomeListView.swift */,
+				811DC8372C60259D00C1B01E /* SettingsView.swift */,
+				811DC83B2C6025F400C1B01E /* ThemeListView.swift */,
 				81B94D132C5D7591009D2ED5 /* AddItemView.swift */,
 				81B94D172C5D769A009D2ED5 /* AddNoteView.swift */,
 				81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */,
@@ -310,11 +320,13 @@
 				81F10BCD2C5BE7020030631B /* MeetingAppApp.swift in Sources */,
 				81B94D042C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
 				81B94D102C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
-				811DC8172C5F036A00C1B01E /* SideMenuView.swift in Sources */,
+				811DC8222C5FF59A00C1B01E /* SideMenuView.swift in Sources */,
 				81B94D082C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
 				81F10BFB2C5C9B230030631B /* SetupView.swift in Sources */,
 				81B94D182C5D769A009D2ED5 /* AddNoteView.swift in Sources */,
 				81F10BF92C5C5A9D0030631B /* SwiftUIView.swift in Sources */,
+				811DC8382C60259D00C1B01E /* SettingsView.swift in Sources */,
+				811DC83C2C6025F400C1B01E /* ThemeListView.swift in Sources */,
 				81B94D202C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */,
 				81B94D142C5D7591009D2ED5 /* AddItemView.swift in Sources */,
 			);
@@ -326,7 +338,9 @@
 			files = (
 				81B94D212C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */,
 				81B94D192C5D769A009D2ED5 /* AddNoteView.swift in Sources */,
+				811DC83D2C6025F400C1B01E /* ThemeListView.swift in Sources */,
 				811DC8182C5F036A00C1B01E /* SideMenuView.swift in Sources */,
+				811DC8392C60259D00C1B01E /* SettingsView.swift in Sources */,
 				81B94D092C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
 				81B94D112C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
 				81B94D052C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
@@ -339,11 +353,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				811DC83E2C6025F400C1B01E /* ThemeListView.swift in Sources */,
 				81B94D062C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
 				81B94D162C5D7591009D2ED5 /* AddItemView.swift in Sources */,
 				81B94D0A2C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
 				81F10BEA2C5BE7040030631B /* MeetingAppUITestsLaunchTests.swift in Sources */,
 				81B94D222C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */,
+				811DC83A2C60259D00C1B01E /* SettingsView.swift in Sources */,
 				81B94D122C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
 				811DC8192C5F036A00C1B01E /* SideMenuView.swift in Sources */,
 				81B94D1A2C5D769A009D2ED5 /* AddNoteView.swift in Sources */,

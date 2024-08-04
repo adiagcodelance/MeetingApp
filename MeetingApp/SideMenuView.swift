@@ -5,6 +5,7 @@ struct SideMenuView: View {
     @Binding var selectedTheme: Theme?
     @Binding var selectedCategory: Category?
     @Binding var menuVisible: Bool
+    @Binding var showSettings: Bool
     
     @State private var isEditingTheme = false
     @State private var editingThemeId: UUID?
@@ -15,32 +16,14 @@ struct SideMenuView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Button(action: {
-                    let newTheme = Theme(name: "Untitled Theme")
-                    itemStore.addTheme(newTheme)
-                    selectedTheme = newTheme
-                    selectedCategory = nil
-                    editingThemeId = newTheme.id
-                    isEditingTheme = true
-                }) {
-                    Image(systemName: "plus")
-                        .font(.title2)
-                        .padding()
-                        .foregroundColor(.black)
-                        .background(Color.white)
-                        .clipShape(Circle())
-                }
-                .padding([.leading, .top], 20)
-                Spacer()
-            }
+            headerView
             
             Text("Themes")
                 .font(.headline)
-                .padding([.leading, .top], 20)
+                .padding(.leading, 20)
             
             themesList
-                .padding(.top, 10)
+                .padding(.top, 5)
             
             Spacer()
         }
@@ -57,6 +40,41 @@ struct SideMenuView: View {
                     }
                 }
         )
+    }
+    
+    private var headerView: some View {
+        HStack {
+            Button(action: {
+                let newTheme = Theme(name: "Untitled Theme")
+                itemStore.addTheme(newTheme)
+                selectedTheme = newTheme
+                selectedCategory = nil
+                editingThemeId = newTheme.id
+                isEditingTheme = true
+            }) {
+                Image(systemName: "plus")
+                    .font(.title2)
+                    .padding()
+                    .foregroundColor(.black)
+                    .background(Color.white)
+                    .clipShape(Circle())
+            }
+            .padding(.leading, 20)
+            .padding(.top, 80)
+            
+            Spacer()
+            
+            Button(action: {
+                showSettings.toggle()
+            }) {
+                Image(systemName: "gearshape")
+                    .font(.title2)
+                    .padding()
+                    .foregroundColor(.black)
+            }
+            .padding(.trailing, 20)
+            .padding(.top, 80)
+        }
     }
     
     private var themesList: some View {
@@ -92,7 +110,7 @@ struct SideMenuView: View {
             } else {
                 Text(theme.name)
                     .font(.headline)
-                    .padding(.vertical, 5)
+                    .padding(.vertical, 3)
                     .onTapGesture {
                         selectedTheme = theme
                         selectedCategory = nil
@@ -134,6 +152,7 @@ struct SideMenuView: View {
                 Image(systemName: "ellipsis")
                     .font(.title2)
                     .foregroundColor(.black)
+                    .padding()
             }
         }
         .background(selectedTheme?.id == theme.id ? Color.purple.opacity(0.2) : Color.clear)
@@ -152,7 +171,7 @@ struct SideMenuView: View {
                     isEditingCategory = false
                 })
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.vertical, 5)
+                .padding(.vertical, 3)
                 .onAppear {
                     newCategoryName = category.name
                 }
@@ -195,9 +214,10 @@ struct SideMenuView_Previews: PreviewProvider {
     @State static var selectedTheme: Theme?
     @State static var selectedCategory: Category?
     @State static var menuVisible = false
+    @State static var showSettings = false
 
     static var previews: some View {
-        SideMenuView(selectedTheme: $selectedTheme, selectedCategory: $selectedCategory, menuVisible: $menuVisible)
+        SideMenuView(selectedTheme: $selectedTheme, selectedCategory: $selectedCategory, menuVisible: $menuVisible, showSettings: $showSettings)
             .environmentObject(ItemStore())
     }
 }

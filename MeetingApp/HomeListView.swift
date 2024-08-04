@@ -11,6 +11,7 @@ struct HomeListView: View {
     @ObservedObject private var selectedCategoryWrapper = SelectedCategoryWrapper()
     @State private var menuVisible = false
     @GestureState private var dragOffset = CGSize.zero
+    @State private var showSettings = false
     
     var body: some View {
         ZStack(alignment: .leading) {
@@ -82,27 +83,7 @@ struct HomeListView: View {
                             Image(systemName: "plus")
                                 .font(.title2)
                                 .padding()
-                                .foregroundColor(.black
-                                )
-                        }
-                    }
-                    
-                    ToolbarItem(placement: .principal) {
-                        Menu {
-                            if let selectedCategory = selectedCategoryWrapper.category {
-                                ForEach(selectedCategory.notes) { note in
-                                    Text(note.name)
-                                }
-                            } else {
-                                Text("Select a category to view notes")
-                            }
-                        } label: {
-                            HStack {
-                                Text(selectedCategoryWrapper.category?.name ?? "Select Category")
-                                    .foregroundColor(.black)
-                                Image(systemName: "arrow.down")
-                                    .foregroundColor(.black)
-                            }
+                                .foregroundColor(.black)
                         }
                     }
                 }
@@ -113,7 +94,7 @@ struct HomeListView: View {
             }
             
             // Side Menu
-            SideMenuView(selectedTheme: $selectedTheme, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible)
+            SideMenuView(selectedTheme: $selectedTheme, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
                 .frame(width: 300) // Set fixed width for the side menu
                 .background(Color.gray.opacity(0.9))
                 .offset(x: menuVisible ? UIScreen.main.bounds.width - 300 + dragOffset.width : UIScreen.main.bounds.width + dragOffset.width) // Adjust to align with the right side
@@ -134,6 +115,15 @@ struct HomeListView: View {
                             }
                         }
                 )
+            
+            // Settings overlay
+            if showSettings {
+                Color.black.opacity(0.4)
+                    .edgesIgnoringSafeArea(.all)
+                
+                SettingsView(selectedTheme: $selectedTheme, menuVisible: $menuVisible, showSettings: $showSettings)
+                    .transition(.move(edge: .trailing))
+            }
             
             // Notch Indicator
             VStack {
