@@ -7,12 +7,25 @@
 
 import SwiftUI
 
-struct SwiftUIView: View {
+struct SplashView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack{
+            Color.white
+                .ignoresSafeArea() // This ensures the color fills the entire screen
+
+            VStack{
+                Text("Meeting Notes Prototype")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+            }
+            .background(Color.white)
+            .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        }
     }
 }
 
-#Preview {
-    SwiftUIView()
+struct SplashView_Previews: PreviewProvider{
+    static var previews: some View{
+        SplashView()
+    }
 }

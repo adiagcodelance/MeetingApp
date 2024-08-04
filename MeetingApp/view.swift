@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct EditNoteView: View {
+struct view: View {
     @EnvironmentObject var itemStore: ItemStore
     var item: Item
     var noteIndex: Int
@@ -39,10 +39,3 @@ struct EditNoteView: View {
         }
     }
 }
-
-struct EditNote_Preview: PreviewProvider {
-    static var previews: some View {
-        EditNoteView(item: <#Item#>, noteIndex: <#Int#>)
-    }
-}
-
