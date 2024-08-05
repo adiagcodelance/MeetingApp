@@ -10,12 +10,10 @@ struct NoteCardView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                TextField("Untitled", text: $noteName, onEditingChanged: { editing in
-                    isEditing = editing
-                })
-                .font(.headline)
-                .padding(.bottom, 2)
-                
+                TextField("Untitled", text: $noteName)
+                    .font(.headline)
+                    .padding(.bottom, 2)
+                    .disabled(!isEditing) // Enable editing based on isEditing state
                 
                 Spacer()
                 
@@ -30,7 +28,6 @@ struct NoteCardView: View {
                 }
             }
             
-            
             Text("Created on: \(createdDate, formatter: DateFormatter.dateTime)")
                 .font(.subheadline)
                 .foregroundColor(.gray)
@@ -40,20 +37,14 @@ struct NoteCardView: View {
                 .font(.body)
                 .foregroundColor(.primary)
                 .padding(8)
-                .background(isEditing ? Color.white : Color.clear)
+                .background(isEditing ? Color.white : Color.clear) // Change background based on isEditing state
                 .cornerRadius(8)
-                .frame(minHeight: 100)
-                .onTapGesture {
-                    isEditing = true
-                }
+                .frame(minHeight: 100) // Ensure the editor has some initial height
+                .disabled(!isEditing) // Enable editing based on isEditing state
         }
         .padding()
-        .background(isEditing ? Color.white : Color.white)
+        .background(Color.white)
         .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(isEditing ? Color.blue : Color.clear, lineWidth: 1)
-        )
     }
 }
 
@@ -64,11 +55,16 @@ struct NoteCardView_Previews: PreviewProvider {
     static var sampleCreatedDate = Date()
 
     static var previews: some View {
-        NoteCardView(noteName: $sampleNoteName, noteContent: $sampleNoteContent, createdDate: sampleCreatedDate, onDelete: {
-            // Sample delete action
-        }, isEditing: $isEditing)
+        NoteCardView(
+            noteName: $sampleNoteName,
+            noteContent: $sampleNoteContent,
+            createdDate: sampleCreatedDate,
+            onDelete: {},
+            isEditing: $isEditing
+        )
     }
 }
+
 
 extension DateFormatter {
     static var dateTime: DateFormatter {

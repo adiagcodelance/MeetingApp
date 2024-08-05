@@ -30,18 +30,9 @@ struct SideMenuView: View {
         .frame(width: 300)
         .background(Color.gray.opacity(0.9))
         .edgesIgnoringSafeArea(.vertical)
-        .offset(x: menuVisible ? 0 : UIScreen.main.bounds.width)
-        .animation(.easeInOut, value: menuVisible)
-        .gesture(
-            DragGesture()
-                .onChanged { value in
-                    if value.translation.width > 50 {
-                        withAnimation {
-                            menuVisible = false
-                        }
-                    }
-                }
-        )
+        .onTapGesture {
+            // Prevent taps inside the menu from closing it
+        }
     }
     
     private var headerView: some View {

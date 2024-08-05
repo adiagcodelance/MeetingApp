@@ -11,12 +11,11 @@ struct HomeListView: View {
     @State private var selectedBucket: Bucket?
     @ObservedObject private var selectedCategoryWrapper = SelectedCategoryWrapper()
     @State private var menuVisible = false
-    @GestureState private var dragOffset = CGSize.zero
     @State private var showSettings = false
     @State private var isEditingNote = false
     
     var body: some View {
-        ZStack(alignment: .trailing) {
+        ZStack {
             // Main content
             NavigationView {
                 VStack {
@@ -67,9 +66,19 @@ struct HomeListView: View {
                     Spacer()
                 }
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Button(action: addNewNote) {
                             Image(systemName: "plus")
+                                .font(.title2)
+                                .padding()
+                                .foregroundColor(themeManager.currentTheme.primaryColor)
+                        }
+                        Button(action: {
+                            withAnimation {
+                                menuVisible.toggle()
+                            }
+                        }) {
+                            Image(systemName: "sidebar.right")
                                 .font(.title2)
                                 .padding()
                                 .foregroundColor(themeManager.currentTheme.primaryColor)
@@ -77,9 +86,6 @@ struct HomeListView: View {
                     }
                 }
                 .background(themeManager.currentTheme.backgroundColor)
-                .disabled(menuVisible)
-                .offset(x: menuVisible ? -300 : 0 + dragOffset.width)
-                .animation(.easeInOut, value: menuVisible)
                 .gesture(
                     TapGesture()
                         .onEnded {
@@ -88,67 +94,32 @@ struct HomeListView: View {
                         }
                 )
             }
+            .disabled(menuVisible)
             
-            // Side Menu
-            SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
-                .frame(width: 300)
-                .background(themeManager.currentTheme.backgroundColor)
-                .offset(x: menuVisible ? 0 : UIScreen.main.bounds.width)
-                .gesture(
-                    DragGesture()
-                        .updating($dragOffset) { value, state, _ in
-                            state = value.translation
-                        }
-                        .onEnded { value in
-                            withAnimation {
-                                if value.translation.width < -100 {
-                                    menuVisible = true
-                                } else if value.translation.width > 100 {
-                                    menuVisible = false
-                                }
-                            }
-                        }
-                )
-            
-            // Settings overlay
-            if showSettings {
+            // Dismiss area
+            if menuVisible {
                 Color.black.opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
-                
-                SettingsView(menuVisible: $menuVisible, showSettings: $showSettings)
-                    .transition(.move(edge: .trailing))
+                    .onTapGesture {
+                        withAnimation {
+                            menuVisible = false
+                        }
+                    }
             }
             
-            // Notch Indicator
-            VStack {
+            // Side Menu
+            HStack {
                 Spacer()
-                HStack {
-                    Spacer()
-                    if !menuVisible {
-                        NotchView()
-                            .padding(.trailing, 10)
-                    }
-                }
-                .frame(maxHeight: .infinity)
+                SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
+                    .frame(width: 300)
+                    .background(themeManager.currentTheme.backgroundColor)
+                    .offset(x: menuVisible ? 0 : 300)
+                    .transition(.move(edge: .trailing))
+                    .zIndex(1)
             }
             .edgesIgnoringSafeArea(.all)
         }
         .edgesIgnoringSafeArea(.all)
-        .gesture(
-            DragGesture()
-                .updating($dragOffset) { value, state, _ in
-                    state = value.translation
-                }
-                .onEnded { value in
-                    withAnimation {
-                        if value.translation.width < -100 {
-                            menuVisible = true
-                        } else if value.translation.width > 100 {
-                            menuVisible = false
-                        }
-                    }
-                }
-        )
     }
     
     private func updateNoteName(_ newName: String, at noteIndex: Int, in category: Category) {
