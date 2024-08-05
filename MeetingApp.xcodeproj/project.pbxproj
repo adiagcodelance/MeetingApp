@@ -19,6 +19,15 @@
 		811DC83C2C6025F400C1B01E /* ThemeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC83B2C6025F400C1B01E /* ThemeListView.swift */; };
 		811DC83D2C6025F400C1B01E /* ThemeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC83B2C6025F400C1B01E /* ThemeListView.swift */; };
 		811DC83E2C6025F400C1B01E /* ThemeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC83B2C6025F400C1B01E /* ThemeListView.swift */; };
+		811DC85A2C613C3100C1B01E /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8592C613C3100C1B01E /* AppTheme.swift */; };
+		811DC85B2C613C3100C1B01E /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8592C613C3100C1B01E /* AppTheme.swift */; };
+		811DC85C2C613C3100C1B01E /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8592C613C3100C1B01E /* AppTheme.swift */; };
+		811DC85E2C613C7800C1B01E /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC85D2C613C7700C1B01E /* ThemeManager.swift */; };
+		811DC85F2C613C7800C1B01E /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC85D2C613C7700C1B01E /* ThemeManager.swift */; };
+		811DC8602C613C7800C1B01E /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC85D2C613C7700C1B01E /* ThemeManager.swift */; };
+		811DC8622C61553200C1B01E /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */; };
+		811DC8632C61553200C1B01E /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */; };
+		811DC8642C61553200C1B01E /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */; };
 		81B94D042C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
 		81B94D052C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
 		81B94D062C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
@@ -28,12 +37,6 @@
 		81B94D102C5D6A68009D2ED5 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */; };
 		81B94D112C5D6A68009D2ED5 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */; };
 		81B94D122C5D6A68009D2ED5 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */; };
-		81B94D142C5D7591009D2ED5 /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D132C5D7591009D2ED5 /* AddItemView.swift */; };
-		81B94D152C5D7591009D2ED5 /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D132C5D7591009D2ED5 /* AddItemView.swift */; };
-		81B94D162C5D7591009D2ED5 /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D132C5D7591009D2ED5 /* AddItemView.swift */; };
-		81B94D182C5D769A009D2ED5 /* AddNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D172C5D769A009D2ED5 /* AddNoteView.swift */; };
-		81B94D192C5D769A009D2ED5 /* AddNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D172C5D769A009D2ED5 /* AddNoteView.swift */; };
-		81B94D1A2C5D769A009D2ED5 /* AddNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D172C5D769A009D2ED5 /* AddNoteView.swift */; };
 		81B94D202C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D1F2C5D8FA2009D2ED5 /* NoteCardView.swift */; };
 		81B94D212C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D1F2C5D8FA2009D2ED5 /* NoteCardView.swift */; };
 		81B94D222C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D1F2C5D8FA2009D2ED5 /* NoteCardView.swift */; };
@@ -70,11 +73,12 @@
 		811DC81E2C5FEDD100C1B01E /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		811DC8372C60259D00C1B01E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		811DC83B2C6025F400C1B01E /* ThemeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeListView.swift; sourceTree = "<group>"; };
+		811DC8592C613C3100C1B01E /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		811DC85D2C613C7700C1B01E /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extensions.swift"; sourceTree = "<group>"; };
 		81B94D032C5D184D009D2ED5 /* SetupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFormView.swift; sourceTree = "<group>"; };
 		81B94D072C5D40FF009D2ED5 /* HomeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeListView.swift; sourceTree = "<group>"; };
 		81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteStore.swift; sourceTree = "<group>"; };
-		81B94D132C5D7591009D2ED5 /* AddItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemView.swift; sourceTree = "<group>"; };
-		81B94D172C5D769A009D2ED5 /* AddNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNoteView.swift; sourceTree = "<group>"; };
 		81B94D1F2C5D8FA2009D2ED5 /* NoteCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCardView.swift; sourceTree = "<group>"; };
 		81F10BC92C5BE7020030631B /* MeetingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81F10BCC2C5BE7020030631B /* MeetingAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingAppApp.swift; sourceTree = "<group>"; };
@@ -140,16 +144,17 @@
 			isa = PBXGroup;
 			children = (
 				811DC8162C5F036A00C1B01E /* SideMenuView.swift */,
+				811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */,
 				81F10BCC2C5BE7020030631B /* MeetingAppApp.swift */,
 				81F10BCE2C5BE7020030631B /* ContentView.swift */,
 				81F10BFA2C5C9B230030631B /* SetupView.swift */,
 				81B94D032C5D184D009D2ED5 /* SetupFormView.swift */,
+				811DC85D2C613C7700C1B01E /* ThemeManager.swift */,
 				81F10BF82C5C5A9D0030631B /* SwiftUIView.swift */,
 				81B94D072C5D40FF009D2ED5 /* HomeListView.swift */,
 				811DC8372C60259D00C1B01E /* SettingsView.swift */,
 				811DC83B2C6025F400C1B01E /* ThemeListView.swift */,
-				81B94D132C5D7591009D2ED5 /* AddItemView.swift */,
-				81B94D172C5D769A009D2ED5 /* AddNoteView.swift */,
+				811DC8592C613C3100C1B01E /* AppTheme.swift */,
 				81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */,
 				81B94D1F2C5D8FA2009D2ED5 /* NoteCardView.swift */,
 				81F10BF62C5C5A210030631B /* Launch Screen.storyboard */,
@@ -316,19 +321,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				811DC8622C61553200C1B01E /* UIApplication+Extensions.swift in Sources */,
 				81F10BCF2C5BE7020030631B /* ContentView.swift in Sources */,
 				81F10BCD2C5BE7020030631B /* MeetingAppApp.swift in Sources */,
 				81B94D042C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
 				81B94D102C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
 				811DC8222C5FF59A00C1B01E /* SideMenuView.swift in Sources */,
 				81B94D082C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
+				811DC85E2C613C7800C1B01E /* ThemeManager.swift in Sources */,
 				81F10BFB2C5C9B230030631B /* SetupView.swift in Sources */,
-				81B94D182C5D769A009D2ED5 /* AddNoteView.swift in Sources */,
 				81F10BF92C5C5A9D0030631B /* SwiftUIView.swift in Sources */,
 				811DC8382C60259D00C1B01E /* SettingsView.swift in Sources */,
+				811DC85A2C613C3100C1B01E /* AppTheme.swift in Sources */,
 				811DC83C2C6025F400C1B01E /* ThemeListView.swift in Sources */,
 				81B94D202C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */,
-				81B94D142C5D7591009D2ED5 /* AddItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,16 +342,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				811DC8632C61553200C1B01E /* UIApplication+Extensions.swift in Sources */,
 				81B94D212C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */,
-				81B94D192C5D769A009D2ED5 /* AddNoteView.swift in Sources */,
 				811DC83D2C6025F400C1B01E /* ThemeListView.swift in Sources */,
 				811DC8182C5F036A00C1B01E /* SideMenuView.swift in Sources */,
+				811DC85B2C613C3100C1B01E /* AppTheme.swift in Sources */,
 				811DC8392C60259D00C1B01E /* SettingsView.swift in Sources */,
 				81B94D092C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
 				81B94D112C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
+				811DC85F2C613C7800C1B01E /* ThemeManager.swift in Sources */,
 				81B94D052C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
 				81F10BDE2C5BE7040030631B /* MeetingAppTests.swift in Sources */,
-				81B94D152C5D7591009D2ED5 /* AddItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,15 +362,16 @@
 			files = (
 				811DC83E2C6025F400C1B01E /* ThemeListView.swift in Sources */,
 				81B94D062C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
-				81B94D162C5D7591009D2ED5 /* AddItemView.swift in Sources */,
+				811DC8642C61553200C1B01E /* UIApplication+Extensions.swift in Sources */,
 				81B94D0A2C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
 				81F10BEA2C5BE7040030631B /* MeetingAppUITestsLaunchTests.swift in Sources */,
 				81B94D222C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */,
 				811DC83A2C60259D00C1B01E /* SettingsView.swift in Sources */,
 				81B94D122C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
 				811DC8192C5F036A00C1B01E /* SideMenuView.swift in Sources */,
-				81B94D1A2C5D769A009D2ED5 /* AddNoteView.swift in Sources */,
 				81F10BE82C5BE7040030631B /* MeetingAppUITests.swift in Sources */,
+				811DC85C2C613C3100C1B01E /* AppTheme.swift in Sources */,
+				811DC8602C613C7800C1B01E /* ThemeManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

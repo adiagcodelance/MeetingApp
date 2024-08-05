@@ -1,27 +1,23 @@
-//
-//  MeetingAppApp.swift
-//  MeetingApp
-//
-//  Created by Aditya Agrawal on 2024-08-01.
-//
-
 import SwiftUI
 
 @main
 struct MeetingAppApp: App {
-    @StateObject private var itemStore = ItemStore() // Initialize ItemStore here
-
+    @StateObject private var itemStore = ItemStore()
+    @StateObject private var themeManager = ThemeManager()
+    
     var body: some Scene {
         WindowGroup {
-            ContentViewWrapper()
-                .environmentObject(itemStore) // Provide ItemStore to the entire app
+            HomeListView()
+                .environmentObject(itemStore)
+                .environmentObject(themeManager)
         }
     }
 }
+import SwiftUI
 
 struct ContentViewWrapper: View {
     @State private var showSplash = true
-
+    
     var body: some View {
         Group {
             if showSplash {
@@ -40,3 +36,10 @@ struct ContentViewWrapper: View {
     }
 }
 
+struct ContentViewWrapper_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentViewWrapper()
+            .environmentObject(ItemStore())
+            .environmentObject(ThemeManager())
+    }
+}

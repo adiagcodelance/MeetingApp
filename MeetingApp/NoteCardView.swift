@@ -3,15 +3,19 @@ import SwiftUI
 struct NoteCardView: View {
     @Binding var noteName: String
     @Binding var noteContent: String
-    var createdDate: Date // Add createdDate property
+    var createdDate: Date
     var onDelete: () -> Void
+    @Binding var isEditing: Bool
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                TextField("Untitled", text: $noteName)
-                    .font(.headline)
-                    .padding(.bottom, 2)
+                TextField("Untitled", text: $noteName, onEditingChanged: { editing in
+                    isEditing = editing
+                })
+                .font(.headline)
+                .padding(.bottom, 2)
+                
                 
                 Spacer()
                 
@@ -26,6 +30,7 @@ struct NoteCardView: View {
                 }
             }
             
+            
             Text("Created on: \(createdDate, formatter: DateFormatter.dateTime)")
                 .font(.subheadline)
                 .foregroundColor(.gray)
@@ -35,31 +40,36 @@ struct NoteCardView: View {
                 .font(.body)
                 .foregroundColor(.primary)
                 .padding(8)
-                .background(Color.white)
+                .background(isEditing ? Color.white : Color.clear)
                 .cornerRadius(8)
-                .frame(minHeight: 100) // Ensure the editor has some initial height
+                .frame(minHeight: 100)
+                .onTapGesture {
+                    isEditing = true
+                }
         }
         .padding()
-        .background(Color.white)
+        .background(isEditing ? Color.white : Color.white)
         .cornerRadius(8)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(isEditing ? Color.blue : Color.clear, lineWidth: 1)
+        )
     }
 }
 
 struct NoteCardView_Previews: PreviewProvider {
     @State static var sampleNoteName = "Untitled"
     @State static var sampleNoteContent = "Enter note content..."
+    @State static var isEditing = false
     static var sampleCreatedDate = Date()
 
     static var previews: some View {
         NoteCardView(noteName: $sampleNoteName, noteContent: $sampleNoteContent, createdDate: sampleCreatedDate, onDelete: {
             // Sample delete action
-        })
+        }, isEditing: $isEditing)
     }
 }
 
-
-
-// DateFormatter extension to provide a short date format
 extension DateFormatter {
     static var dateTime: DateFormatter {
         let formatter = DateFormatter()

@@ -67,7 +67,7 @@ class Category: Identifiable, ObservableObject, Codable {
     }
 }
 
-class Theme: Identifiable, ObservableObject, Codable {
+class Bucket: Identifiable, ObservableObject, Codable {
     var id = UUID()
     @Published var name: String
     @Published var categories: [Category]
@@ -99,7 +99,7 @@ class Theme: Identifiable, ObservableObject, Codable {
 }
 
 class ItemStore: ObservableObject {
-    @Published var themes: [Theme] = [] {
+    @Published var buckets: [Bucket] = [] {
         didSet {
             saveItems()
         }
@@ -110,45 +110,45 @@ class ItemStore: ObservableObject {
     }
     
     // Theme Management
-    func addTheme(_ theme: Theme) {
-        themes.append(theme)
+    func addBucket(_ bucket: Bucket) {
+        buckets.append(bucket)
         saveItems()
     }
     
-    func deleteTheme(themeId: UUID) {
-        themes.removeAll { $0.id == themeId }
+    func deleteBucket(bucketId: UUID) {
+        buckets.removeAll { $0.id == bucketId }
         saveItems()
     }
     
     // Category Management
-    func addCategory(to themeId: UUID, category: Category) {
-        if let themeIndex = themes.firstIndex(where: { $0.id == themeId }) {
-            themes[themeIndex].categories.append(category)
+    func addCategory(to bucketId: UUID, category: Category) {
+        if let bucketIndex = buckets.firstIndex(where: { $0.id == bucketId }) {
+            buckets[bucketIndex].categories.append(category)
             saveItems()
         }
     }
     
-    func deleteCategory(from themeId: UUID, categoryId: UUID) {
-        if let themeIndex = themes.firstIndex(where: { $0.id == themeId }) {
-            themes[themeIndex].categories.removeAll { $0.id == categoryId }
+    func deleteCategory(from bucketId: UUID, categoryId: UUID) {
+        if let bucketIndex = buckets.firstIndex(where: { $0.id == bucketId }) {
+            buckets[bucketIndex].categories.removeAll { $0.id == categoryId }
             saveItems()
         }
     }
     
     // Note Management
-    func addNote(to categoryId: UUID, in themeId: UUID, note: Note) {
-        if let themeIndex = themes.firstIndex(where: { $0.id == themeId }) {
-            if let categoryIndex = themes[themeIndex].categories.firstIndex(where: { $0.id == categoryId }) {
-                themes[themeIndex].categories[categoryIndex].notes.append(note)
+    func addNote(to categoryId: UUID, in bucketId: UUID, note: Note) {
+        if let bucketIndex = buckets.firstIndex(where: { $0.id == bucketId }) {
+            if let categoryIndex = buckets[bucketIndex].categories.firstIndex(where: { $0.id == categoryId }) {
+                buckets[bucketIndex].categories[categoryIndex].notes.append(note)
                 saveItems()
             }
         }
     }
     
-    func deleteNote(from categoryId: UUID, in themeId: UUID, noteId: UUID) {
-        if let themeIndex = themes.firstIndex(where: { $0.id == themeId }) {
-            if let categoryIndex = themes[themeIndex].categories.firstIndex(where: { $0.id == categoryId }) {
-                themes[themeIndex].categories[categoryIndex].notes.removeAll { $0.id == noteId }
+    func deleteNote(from categoryId: UUID, in bucketId: UUID, noteId: UUID) {
+        if let bucketIndex = buckets.firstIndex(where: { $0.id == bucketId }) {
+            if let categoryIndex = buckets[bucketIndex].categories.firstIndex(where: { $0.id == categoryId }) {
+                buckets[bucketIndex].categories[categoryIndex].notes.removeAll { $0.id == noteId }
                 saveItems()
             }
         }
@@ -156,17 +156,17 @@ class ItemStore: ObservableObject {
     
     // MARK: - Data Persistence
     func saveItems() {
-        if let data = try? JSONEncoder().encode(themes) {
-            UserDefaults.standard.set(data, forKey: "themes")
-            print("Themes saved successfully.")
+        if let data = try? JSONEncoder().encode(buckets) {
+            UserDefaults.standard.set(data, forKey: "buckets")
+            print("Bucket saved successfully.")
         }
     }
     
     private func loadItems() {
-        if let data = UserDefaults.standard.data(forKey: "themes"),
-           let decodedThemes = try? JSONDecoder().decode([Theme].self, from: data) {
-            themes = decodedThemes
-            print("Themes loaded successfully: \(themes)")
+        if let data = UserDefaults.standard.data(forKey: "buckets"),
+           let decodedBuckets = try? JSONDecoder().decode([Bucket].self, from: data) {
+            buckets = decodedBuckets
+            print("Buckets loaded successfully: \(buckets)")
         }
     }
 }

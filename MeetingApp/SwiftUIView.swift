@@ -17,6 +17,7 @@ struct SplashView: View {
                 Text("Meeting Notes Prototype")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .padding(50)
             }
             .background(Color.white)
             .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)

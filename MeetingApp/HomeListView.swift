@@ -7,14 +7,16 @@ class SelectedCategoryWrapper: ObservableObject {
 
 struct HomeListView: View {
     @EnvironmentObject var itemStore: ItemStore
-    @State private var selectedTheme: Theme?
+    @EnvironmentObject var themeManager: ThemeManager
+    @State private var selectedBucket: Bucket?
     @ObservedObject private var selectedCategoryWrapper = SelectedCategoryWrapper()
     @State private var menuVisible = false
     @GestureState private var dragOffset = CGSize.zero
     @State private var showSettings = false
+    @State private var isEditingNote = false
     
     var body: some View {
-        ZStack(alignment: .leading) {
+        ZStack(alignment: .trailing) {
             // Main content
             NavigationView {
                 VStack {
@@ -22,6 +24,7 @@ struct HomeListView: View {
                         .font(.largeTitle)
                         .padding(.horizontal, 30)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
                     
                     if let selectedCategory = selectedCategoryWrapper.category {
                         ScrollView {
@@ -32,32 +35,25 @@ struct HomeListView: View {
                                         noteName: Binding(
                                             get: { note.name },
                                             set: { newName in
-                                                if let themeIndex = itemStore.themes.firstIndex(where: { $0.id == selectedTheme?.id }),
-                                                   let categoryIndex = itemStore.themes[themeIndex].categories.firstIndex(where: { $0.id == selectedCategory.id }) {
-                                                    itemStore.themes[themeIndex].categories[categoryIndex].notes[noteIndex].name = newName
-                                                    itemStore.saveItems()
-                                                }
+                                                updateNoteName(newName, at: noteIndex, in: selectedCategory)
                                             }
                                         ),
                                         noteContent: Binding(
                                             get: { note.content },
                                             set: { newContent in
-                                                if let themeIndex = itemStore.themes.firstIndex(where: { $0.id == selectedTheme?.id }),
-                                                   let categoryIndex = itemStore.themes[themeIndex].categories.firstIndex(where: { $0.id == selectedCategory.id }) {
-                                                    itemStore.themes[themeIndex].categories[categoryIndex].notes[noteIndex].content = newContent
-                                                    itemStore.saveItems()
-                                                }
+                                                updateNoteContent(newContent, at: noteIndex, in: selectedCategory)
                                             }
                                         ),
                                         createdDate: note.createdDate,
                                         onDelete: {
-                                            if let themeId = selectedTheme?.id {
-                                                itemStore.deleteNote(from: selectedCategory.id, in: themeId, noteId: note.id)
-                                                updateSelectedCategory(themeId: themeId, categoryId: selectedCategory.id)
-                                            }
-                                        }
+                                            deleteNote(note.id, from: selectedCategory)
+                                        },
+                                        isEditing: $isEditingNote
                                     )
                                     .padding(.bottom, 10)
+                                    .onTapGesture {
+                                        isEditingNote = false
+                                    }
                                 }
                             }
                             .padding(.horizontal)
@@ -65,52 +61,50 @@ struct HomeListView: View {
                     } else {
                         Text("Select a category to view notes.")
                             .padding()
+                            .foregroundColor(themeManager.currentTheme.secondaryColor)
                     }
                     
                     Spacer()
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            if let themeId = selectedTheme?.id, let categoryId = selectedCategoryWrapper.category?.id {
-                                withAnimation {
-                                    let newNote = Note(name: "Untitled", content: "Enter note content...")
-                                    itemStore.addNote(to: categoryId, in: themeId, note: newNote)
-                                    updateSelectedCategory(themeId: themeId, categoryId: categoryId)
-                                }
-                            }
-                        }) {
+                        Button(action: addNewNote) {
                             Image(systemName: "plus")
                                 .font(.title2)
                                 .padding()
-                                .foregroundColor(.black)
+                                .foregroundColor(themeManager.currentTheme.primaryColor)
                         }
                     }
                 }
-                .background(Color.white) // Ensure background color to make content opaque
-                .disabled(menuVisible) // Disable interactions when menu is open
-                .offset(x: menuVisible ? -300 : 0 + dragOffset.width) // Move main content based on menuOffset
-                .animation(.easeInOut, value: menuVisible) // Animate changes in menu visibility
+                .background(themeManager.currentTheme.backgroundColor)
+                .disabled(menuVisible)
+                .offset(x: menuVisible ? -300 : 0 + dragOffset.width)
+                .animation(.easeInOut, value: menuVisible)
+                .gesture(
+                    TapGesture()
+                        .onEnded {
+                            isEditingNote = false
+                            hideKeyboard()
+                        }
+                )
             }
             
             // Side Menu
-            SideMenuView(selectedTheme: $selectedTheme, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
-                .frame(width: 300) // Set fixed width for the side menu
-                .background(Color.gray.opacity(0.9))
-                .offset(x: menuVisible ? UIScreen.main.bounds.width - 300 + dragOffset.width : UIScreen.main.bounds.width + dragOffset.width) // Adjust to align with the right side
+            SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
+                .frame(width: 300)
+                .background(themeManager.currentTheme.backgroundColor)
+                .offset(x: menuVisible ? 0 : UIScreen.main.bounds.width)
                 .gesture(
                     DragGesture()
                         .updating($dragOffset) { value, state, _ in
                             state = value.translation
                         }
                         .onEnded { value in
-                            if value.translation.width < -100 {
-                                withAnimation {
-                                    menuVisible = true // Show menu
-                                }
-                            } else if value.translation.width > 100 {
-                                withAnimation {
-                                    menuVisible = false // Hide menu
+                            withAnimation {
+                                if value.translation.width < -100 {
+                                    menuVisible = true
+                                } else if value.translation.width > 100 {
+                                    menuVisible = false
                                 }
                             }
                         }
@@ -121,7 +115,7 @@ struct HomeListView: View {
                 Color.black.opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
                 
-                SettingsView(selectedTheme: $selectedTheme, menuVisible: $menuVisible, showSettings: $showSettings)
+                SettingsView(menuVisible: $menuVisible, showSettings: $showSettings)
                     .transition(.move(edge: .trailing))
             }
             
@@ -130,39 +124,70 @@ struct HomeListView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    if !menuVisible { // Only show the notch when the menu is hidden
+                    if !menuVisible {
                         NotchView()
-                            .padding(.trailing, 10) // Add padding to keep notch visible
+                            .padding(.trailing, 10)
                     }
                 }
-                .frame(maxHeight: .infinity) // Ensure HStack takes full height for vertical centering
+                .frame(maxHeight: .infinity)
             }
-            .edgesIgnoringSafeArea(.all) // Ensure notch is visible across the screen
+            .edgesIgnoringSafeArea(.all)
         }
-        .edgesIgnoringSafeArea(.all) // Ensure side menu goes over the navigation view
+        .edgesIgnoringSafeArea(.all)
         .gesture(
             DragGesture()
                 .updating($dragOffset) { value, state, _ in
                     state = value.translation
                 }
                 .onEnded { value in
-                    if value.translation.width < -100 {
-                        withAnimation {
-                            menuVisible = true // Show menu
-                        }
-                    } else if value.translation.width > 100 {
-                        withAnimation {
-                            menuVisible = false // Hide menu
+                    withAnimation {
+                        if value.translation.width < -100 {
+                            menuVisible = true
+                        } else if value.translation.width > 100 {
+                            menuVisible = false
                         }
                     }
                 }
         )
     }
     
-    private func updateSelectedCategory(themeId: UUID, categoryId: UUID) {
-        if let themeIndex = itemStore.themes.firstIndex(where: { $0.id == themeId }),
-           let categoryIndex = itemStore.themes[themeIndex].categories.firstIndex(where: { $0.id == categoryId }) {
-            selectedCategoryWrapper.category = itemStore.themes[themeIndex].categories[categoryIndex]
+    private func updateNoteName(_ newName: String, at noteIndex: Int, in category: Category) {
+        if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == selectedBucket?.id }),
+           let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == category.id }) {
+            itemStore.buckets[bucketIndex].categories[categoryIndex].notes[noteIndex].name = newName
+            itemStore.saveItems()
+        }
+    }
+    
+    private func updateNoteContent(_ newContent: String, at noteIndex: Int, in category: Category) {
+        if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == selectedBucket?.id }),
+           let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == category.id }) {
+            itemStore.buckets[bucketIndex].categories[categoryIndex].notes[noteIndex].content = newContent
+            itemStore.saveItems()
+        }
+    }
+    
+    private func deleteNote(_ noteId: UUID, from category: Category) {
+        if let bucketId = selectedBucket?.id {
+            itemStore.deleteNote(from: category.id, in: bucketId, noteId: noteId)
+            updateSelectedCategory(bucketId: bucketId, categoryId: category.id)
+        }
+    }
+    
+    private func addNewNote() {
+        if let bucketId = selectedBucket?.id, let categoryId = selectedCategoryWrapper.category?.id {
+            withAnimation {
+                let newNote = Note(name: "Untitled", content: "Enter note content...")
+                itemStore.addNote(to: categoryId, in: bucketId, note: newNote)
+                updateSelectedCategory(bucketId: bucketId, categoryId: categoryId)
+            }
+        }
+    }
+    
+    private func updateSelectedCategory(bucketId: UUID, categoryId: UUID) {
+        if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == bucketId }),
+           let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == categoryId }) {
+            selectedCategoryWrapper.category = itemStore.buckets[bucketIndex].categories[categoryIndex]
         }
     }
 }
@@ -186,5 +211,6 @@ struct HomeListView_Previews: PreviewProvider {
     static var previews: some View {
         HomeListView()
             .environmentObject(ItemStore())
+            .environmentObject(ThemeManager())
     }
 }

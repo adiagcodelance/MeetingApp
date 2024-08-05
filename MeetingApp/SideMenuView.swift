@@ -2,27 +2,27 @@ import SwiftUI
 
 struct SideMenuView: View {
     @EnvironmentObject var itemStore: ItemStore
-    @Binding var selectedTheme: Theme?
+    @Binding var selectedBucket: Bucket?
     @Binding var selectedCategory: Category?
     @Binding var menuVisible: Bool
     @Binding var showSettings: Bool
     
-    @State private var isEditingTheme = false
-    @State private var editingThemeId: UUID?
+    @State private var isEditingBucket = false
+    @State private var editingBucketId: UUID?
     @State private var isEditingCategory = false
     @State private var editingCategoryId: UUID?
-    @State private var newThemeName = ""
+    @State private var newBucketName = ""
     @State private var newCategoryName = ""
     
     var body: some View {
         VStack(alignment: .leading) {
             headerView
             
-            Text("Themes")
+            Text("Buckets")
                 .font(.headline)
                 .padding(.leading, 20)
             
-            themesList
+            bucketsList
                 .padding(.top, 5)
             
             Spacer()
@@ -30,10 +30,12 @@ struct SideMenuView: View {
         .frame(width: 300)
         .background(Color.gray.opacity(0.9))
         .edgesIgnoringSafeArea(.vertical)
+        .offset(x: menuVisible ? 0 : UIScreen.main.bounds.width)
+        .animation(.easeInOut, value: menuVisible)
         .gesture(
             DragGesture()
                 .onChanged { value in
-                    if value.translation.width < 0 {
+                    if value.translation.width > 50 {
                         withAnimation {
                             menuVisible = false
                         }
@@ -45,12 +47,14 @@ struct SideMenuView: View {
     private var headerView: some View {
         HStack {
             Button(action: {
-                let newTheme = Theme(name: "Untitled Theme")
-                itemStore.addTheme(newTheme)
-                selectedTheme = newTheme
-                selectedCategory = nil
-                editingThemeId = newTheme.id
-                isEditingTheme = true
+                withAnimation {
+                    let newBucket = Bucket(name: "Untitled Bucket")
+                    itemStore.addBucket(newBucket)
+                    selectedBucket = newBucket
+                    selectedCategory = nil
+                    editingBucketId = newBucket.id
+                    isEditingBucket = true
+                }
             }) {
                 Image(systemName: "plus")
                     .font(.title2)
@@ -65,7 +69,9 @@ struct SideMenuView: View {
             Spacer()
             
             Button(action: {
-                showSettings.toggle()
+                withAnimation {
+                    showSettings.toggle()
+                }
             }) {
                 Image(systemName: "gearshape")
                     .font(.title2)
@@ -77,12 +83,12 @@ struct SideMenuView: View {
         }
     }
     
-    private var themesList: some View {
+    private var bucketsList: some View {
         List {
-            ForEach(itemStore.themes) { theme in
-                Section(header: themeHeader(for: theme)) {
-                    ForEach(theme.categories) { category in
-                        categoryRow(for: category, in: theme)
+            ForEach(itemStore.buckets) { bucket in
+                Section(header: bucketHeader(for: bucket)) {
+                    ForEach(bucket.categories) { category in
+                        categoryRow(for: category, in: bucket)
                     }
                 }
                 .listRowBackground(Color.gray.opacity(0.9)) // Ensure consistent background color
@@ -92,41 +98,45 @@ struct SideMenuView: View {
         .padding(.leading, 10)
     }
     
-    private func themeHeader(for theme: Theme) -> some View {
+    private func bucketHeader(for bucket: Bucket) -> some View {
         HStack {
-            if isEditingTheme && editingThemeId == theme.id {
-                TextField("Theme Name", text: $newThemeName, onCommit: {
-                    if let index = itemStore.themes.firstIndex(where: { $0.id == theme.id }) {
-                        itemStore.themes[index].name = newThemeName
+            if isEditingBucket && editingBucketId == bucket.id {
+                TextField("Bucket Name", text: $newBucketName, onCommit: {
+                    if let index = itemStore.buckets.firstIndex(where: { $0.id == bucket.id }) {
+                        itemStore.buckets[index].name = newBucketName
                         itemStore.saveItems()
                     }
-                    isEditingTheme = false
+                    withAnimation {
+                        isEditingBucket = false
+                    }
                 })
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.vertical, 5)
                 .onAppear {
-                    newThemeName = theme.name
+                    newBucketName = bucket.name
                 }
             } else {
-                Text(theme.name)
+                Text(bucket.name)
                     .font(.headline)
                     .padding(.vertical, 3)
                     .onTapGesture {
-                        selectedTheme = theme
-                        selectedCategory = nil
                         withAnimation {
+                            selectedBucket = bucket
+                            selectedCategory = nil
                             menuVisible = false
                         }
                     }
             }
             Spacer()
             Button(action: {
-                let newCategory = Category(name: "Untitled Category")
-                if let index = itemStore.themes.firstIndex(where: { $0.id == theme.id }) {
-                    itemStore.addCategory(to: itemStore.themes[index].id, category: newCategory)
-                    selectedCategory = newCategory
-                    editingCategoryId = newCategory.id
-                    isEditingCategory = true
+                withAnimation {
+                    let newCategory = Category(name: "Untitled Category")
+                    if let index = itemStore.buckets.firstIndex(where: { $0.id == bucket.id }) {
+                        itemStore.addCategory(to: itemStore.buckets[index].id, category: newCategory)
+                        selectedCategory = newCategory
+                        editingCategoryId = newCategory.id
+                        isEditingCategory = true
+                    }
                 }
             }) {
                 Image(systemName: "plus")
@@ -136,15 +146,19 @@ struct SideMenuView: View {
             }
             Menu {
                 Button(action: {
-                    editingThemeId = theme.id
-                    isEditingTheme = true
+                    withAnimation {
+                        editingBucketId = bucket.id
+                        isEditingBucket = true
+                    }
                 }) {
                     Label("Rename", systemImage: "pencil")
                 }
                 Button(action: {
-                    itemStore.deleteTheme(themeId: theme.id)
-                    selectedTheme = nil
-                    selectedCategory = nil
+                    withAnimation {
+                        itemStore.deleteBucket(bucketId: bucket.id)
+                        selectedBucket = nil
+                        selectedCategory = nil
+                    }
                 }) {
                     Label("Delete", systemImage: "trash")
                 }
@@ -155,20 +169,22 @@ struct SideMenuView: View {
                     .padding()
             }
         }
-        .background(selectedTheme?.id == theme.id ? Color.purple.opacity(0.2) : Color.clear)
+        .background(selectedBucket?.id == bucket.id ? Color.purple.opacity(0.2) : Color.clear)
         .cornerRadius(8)
     }
     
-    private func categoryRow(for category: Category, in theme: Theme) -> some View {
+    private func categoryRow(for category: Category, in bucket: Bucket) -> some View {
         HStack {
             if isEditingCategory && editingCategoryId == category.id {
                 TextField("Category Name", text: $newCategoryName, onCommit: {
-                    if let themeIndex = itemStore.themes.firstIndex(where: { $0.id == theme.id }),
-                       let categoryIndex = itemStore.themes[themeIndex].categories.firstIndex(where: { $0.id == category.id }) {
-                        itemStore.themes[themeIndex].categories[categoryIndex].name = newCategoryName
+                    if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == bucket.id }),
+                       let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == category.id }) {
+                        itemStore.buckets[bucketIndex].categories[categoryIndex].name = newCategoryName
                         itemStore.saveItems()
                     }
-                    isEditingCategory = false
+                    withAnimation {
+                        isEditingCategory = false
+                    }
                 })
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.vertical, 3)
@@ -178,9 +194,9 @@ struct SideMenuView: View {
             } else {
                 Text(category.name)
                     .onTapGesture {
-                        selectedCategory = category
-                        selectedTheme = theme
                         withAnimation {
+                            selectedCategory = category
+                            selectedBucket = bucket
                             menuVisible = false
                         }
                     }
@@ -188,14 +204,18 @@ struct SideMenuView: View {
             Spacer()
             Menu {
                 Button(action: {
-                    editingCategoryId = category.id
-                    isEditingCategory = true
+                    withAnimation {
+                        editingCategoryId = category.id
+                        isEditingCategory = true
+                    }
                 }) {
                     Label("Rename", systemImage: "pencil")
                 }
                 Button(action: {
-                    itemStore.deleteCategory(from: theme.id, categoryId: category.id)
-                    selectedCategory = nil
+                    withAnimation {
+                        itemStore.deleteCategory(from: bucket.id, categoryId: category.id)
+                        selectedCategory = nil
+                    }
                 }) {
                     Label("Delete", systemImage: "trash")
                 }
@@ -211,13 +231,13 @@ struct SideMenuView: View {
 }
 
 struct SideMenuView_Previews: PreviewProvider {
-    @State static var selectedTheme: Theme?
+    @State static var selectedBucket: Bucket?
     @State static var selectedCategory: Category?
     @State static var menuVisible = false
     @State static var showSettings = false
 
     static var previews: some View {
-        SideMenuView(selectedTheme: $selectedTheme, selectedCategory: $selectedCategory, menuVisible: $menuVisible, showSettings: $showSettings)
+        SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategory, menuVisible: $menuVisible, showSettings: $showSettings)
             .environmentObject(ItemStore())
     }
 }

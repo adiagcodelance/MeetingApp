@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Binding var selectedTheme: Theme?
     @Binding var menuVisible: Bool
     @Binding var showSettings: Bool
+    @EnvironmentObject var themeManager: ThemeManager
     
     var body: some View {
         ZStack {
@@ -15,7 +15,7 @@ struct SettingsView: View {
             
             NavigationView {
                 List {
-                    NavigationLink(destination: ThemesListView(selectedTheme: $selectedTheme, menuVisible: $menuVisible)) {
+                    NavigationLink(destination: ThemesListView(menuVisible: $menuVisible)) {
                         Text("Themes")
                     }
                 }
@@ -30,11 +30,11 @@ struct SettingsView: View {
 }
 
 struct SettingsView_Previews: PreviewProvider {
-    @State static var selectedTheme: Theme?
     @State static var menuVisible = false
     @State static var showSettings = true
     
     static var previews: some View {
-        SettingsView(selectedTheme: $selectedTheme, menuVisible: $menuVisible, showSettings: $showSettings)
+        SettingsView(menuVisible: $menuVisible, showSettings: $showSettings)
+            .environmentObject(ThemeManager())
     }
 }

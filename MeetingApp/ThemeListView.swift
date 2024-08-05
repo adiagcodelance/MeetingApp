@@ -1,22 +1,25 @@
 import SwiftUI
 
 struct ThemesListView: View {
-    @Binding var selectedTheme: Theme?
+    @EnvironmentObject var themeManager: ThemeManager
     @Binding var menuVisible: Bool
-    
-    @EnvironmentObject var itemStore: ItemStore
     
     var body: some View {
         List {
-            ForEach(itemStore.themes) { theme in
-                Text(theme.name)
-                    .onTapGesture {
-                        selectedTheme = theme
-                        menuVisible = false
+            ForEach([AppTheme.defaultTheme, AppTheme.darkTheme, AppTheme.lightTheme]) { theme in
+                HStack {
+                    Text(theme.name)
+                    Spacer()
+                    if theme.id == themeManager.currentTheme.id {
+                        Image(systemName: "checkmark")
+                            .foregroundColor(themeManager.currentTheme.primaryColor)
                     }
-                    .padding()
-                    .background(selectedTheme?.id == theme.id ? Color.purple.opacity(0.2) : Color.clear)
-                    .cornerRadius(8)
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    themeManager.applyTheme(theme)
+                    menuVisible = false
+                }
             }
         }
         .navigationTitle("Themes")
@@ -24,11 +27,10 @@ struct ThemesListView: View {
 }
 
 struct ThemesListView_Previews: PreviewProvider {
-    @State static var selectedTheme: Theme?
     @State static var menuVisible = false
     
     static var previews: some View {
-        ThemesListView(selectedTheme: $selectedTheme, menuVisible: $menuVisible)
-            .environmentObject(ItemStore())
+        ThemesListView(menuVisible: $menuVisible)
+            .environmentObject(ThemeManager())
     }
 }
