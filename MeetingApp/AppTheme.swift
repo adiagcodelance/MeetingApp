@@ -63,6 +63,15 @@ struct AppTheme: Identifiable, Codable, Equatable {
                                      noteCardBackgroundColor: Color(hex: "#D8BFD8"), // Thistle
                                      borderColor: Color.white.opacity(0.8), // Soft white
                                      shadowColor: Color.black.opacity(0.1))
+    static let blackOrangeNeuro = AppTheme(
+        name: "Black Orange Neuro",
+        primaryColor: Color(hex: "#FFA500"), // Orange
+        secondaryColor: Color(hex: "#FFFFFF"), // White
+        backgroundColor: Color(hex: "#1C1C1C"), // Almost Black for Neuromorphic background
+        noteCardBackgroundColor: Color(hex: "#2C2C2C"), // Dark Gray for note cards
+        borderColor: Color.white.opacity(0.2), // Soft white border for contrast
+        shadowColor: Color.black.opacity(0.2) // Deeper shadow for Neuromorphism
+    )
 }
 
 // Color extension for Hex conversion
