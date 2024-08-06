@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SideMenuView: View {
     @EnvironmentObject var itemStore: ItemStore
+    @EnvironmentObject var themeManager: ThemeManager
     @Binding var selectedBucket: Bucket?
     @Binding var selectedCategory: Category?
     @Binding var menuVisible: Bool
@@ -15,24 +16,38 @@ struct SideMenuView: View {
     @State private var newCategoryName = ""
     
     var body: some View {
-        VStack(alignment: .leading) {
-            headerView
-            
-            Text("Buckets")
-                .font(.headline)
-                .padding(.leading, 20)
-            
-            bucketsList
-                .padding(.top, 5)
-            
-            Spacer()
+        ZStack {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(themeManager.currentTheme.backgroundColor)
+                .shadow(color: themeManager.currentTheme.shadowColor, radius: 10, x: 0, y: 5)
+
+            VStack(alignment: .leading) {
+                headerView
+                
+                Text("Buckets")
+                    .font(.headline)
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
+                    .padding(.leading, 20)
+                
+                bucketsList
+                    .padding(.top, 5)
+                
+                Spacer()
+            }
+            .frame(width: 300)
+            .padding() // Add padding inside the rounded rectangle
         }
-        .frame(width: 300)
-        .background(Color.gray.opacity(0.9))
         .edgesIgnoringSafeArea(.vertical)
-        .onTapGesture {
-            // Prevent taps inside the menu from closing it
-        }
+        .gesture(
+            TapGesture()
+                .onEnded {
+                    // Quit editing mode when tapping outside the text fields
+                    withAnimation {
+                        isEditingBucket = false
+                        isEditingCategory = false
+                    }
+                }
+        )
     }
     
     private var headerView: some View {
@@ -50,9 +65,7 @@ struct SideMenuView: View {
                 Image(systemName: "plus")
                     .font(.title2)
                     .padding()
-                    .foregroundColor(.black)
-                    .background(Color.white)
-                    .clipShape(Circle())
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
             }
             .padding(.leading, 20)
             .padding(.top, 80)
@@ -67,7 +80,7 @@ struct SideMenuView: View {
                 Image(systemName: "gearshape")
                     .font(.title2)
                     .padding()
-                    .foregroundColor(.black)
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
             }
             .padding(.trailing, 20)
             .padding(.top, 80)
@@ -82,7 +95,7 @@ struct SideMenuView: View {
                         categoryRow(for: category, in: bucket)
                     }
                 }
-                .listRowBackground(Color.gray.opacity(0.9)) // Ensure consistent background color
+                .listRowBackground(themeManager.currentTheme.backgroundColor)
             }
         }
         .listStyle(PlainListStyle())
@@ -106,10 +119,12 @@ struct SideMenuView: View {
                 .onAppear {
                     newBucketName = bucket.name
                 }
+                .foregroundColor(themeManager.currentTheme.primaryColor)
             } else {
                 Text(bucket.name)
                     .font(.headline)
                     .padding(.vertical, 3)
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
                     .onTapGesture {
                         withAnimation {
                             selectedBucket = bucket
@@ -133,7 +148,7 @@ struct SideMenuView: View {
                 Image(systemName: "plus")
                     .font(.title2)
                     .padding()
-                    .foregroundColor(.black)
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
             }
             Menu {
                 Button(action: {
@@ -156,11 +171,11 @@ struct SideMenuView: View {
             } label: {
                 Image(systemName: "ellipsis")
                     .font(.title2)
-                    .foregroundColor(.black)
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
                     .padding()
             }
         }
-        .background(selectedBucket?.id == bucket.id ? Color.purple.opacity(0.2) : Color.clear)
+        .background(selectedBucket?.id == bucket.id ? themeManager.currentTheme.secondaryColor.opacity(0.2) : Color.clear)
         .cornerRadius(8)
     }
     
@@ -182,8 +197,10 @@ struct SideMenuView: View {
                 .onAppear {
                     newCategoryName = category.name
                 }
+                .foregroundColor(themeManager.currentTheme.primaryColor)
             } else {
                 Text(category.name)
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
                     .onTapGesture {
                         withAnimation {
                             selectedCategory = category
@@ -213,10 +230,10 @@ struct SideMenuView: View {
             } label: {
                 Image(systemName: "ellipsis")
                     .font(.title2)
-                    .foregroundColor(.black)
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
             }
         }
-        .background(selectedCategory?.id == category.id ? Color.purple.opacity(0.2) : Color.gray.opacity(0.9)) // Ensure consistent background color
+        .background(selectedCategory?.id == category.id ? themeManager.currentTheme.secondaryColor.opacity(0.2) : themeManager.currentTheme.backgroundColor)
         .cornerRadius(8)
     }
 }
@@ -230,5 +247,6 @@ struct SideMenuView_Previews: PreviewProvider {
     static var previews: some View {
         SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategory, menuVisible: $menuVisible, showSettings: $showSettings)
             .environmentObject(ItemStore())
+            .environmentObject(ThemeManager())
     }
 }

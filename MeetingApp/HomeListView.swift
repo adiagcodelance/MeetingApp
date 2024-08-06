@@ -12,7 +12,7 @@ struct HomeListView: View {
     @ObservedObject private var selectedCategoryWrapper = SelectedCategoryWrapper()
     @State private var menuVisible = false
     @State private var showSettings = false
-    @State private var isEditingNote = false
+    @State private var editingNoteID: UUID? = nil
     
     var body: some View {
         ZStack {
@@ -22,6 +22,7 @@ struct HomeListView: View {
                     Text("Notes")
                         .font(.largeTitle)
                         .padding(.horizontal, 30)
+                        .padding(.top, 20) // Added top padding
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(themeManager.currentTheme.primaryColor)
                     
@@ -47,12 +48,14 @@ struct HomeListView: View {
                                         onDelete: {
                                             deleteNote(note.id, from: selectedCategory)
                                         },
-                                        isEditing: $isEditingNote
+                                        isEditing: Binding(
+                                            get: { editingNoteID == note.id },
+                                            set: { newValue in
+                                                editingNoteID = newValue ? note.id : nil
+                                            }
+                                        )
                                     )
-                                    .padding(.bottom, 10)
-                                    .onTapGesture {
-                                        isEditingNote = false
-                                    }
+                                    .padding(.top, 20)
                                 }
                             }
                             .padding(.horizontal)
@@ -89,7 +92,7 @@ struct HomeListView: View {
                 .gesture(
                     TapGesture()
                         .onEnded {
-                            isEditingNote = false
+                            editingNoteID = nil
                             hideKeyboard()
                         }
                 )
@@ -113,11 +116,29 @@ struct HomeListView: View {
                 SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
                     .frame(width: 300)
                     .background(themeManager.currentTheme.backgroundColor)
-                    .offset(x: menuVisible ? 0 : 300)
+                    .offset(x: menuVisible ? 0 : 320)
                     .transition(.move(edge: .trailing))
                     .zIndex(1)
             }
             .edgesIgnoringSafeArea(.all)
+            
+            // Settings View Overlay
+            if showSettings {
+                Color.black.opacity(0.4)
+                    .edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
+                        showSettings = false
+                    }
+                
+                SettingsView(menuVisible: $menuVisible, showSettings: $showSettings)
+                    .environmentObject(themeManager)
+                    .frame(width: 300, height: 500)
+                    .background(themeManager.currentTheme.backgroundColor)
+                    .cornerRadius(20)
+                    .shadow(radius: 20)
+                    .zIndex(2)
+                    .transition(.scale)
+            }
         }
         .edgesIgnoringSafeArea(.all)
     }
@@ -160,21 +181,6 @@ struct HomeListView: View {
            let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == categoryId }) {
             selectedCategoryWrapper.category = itemStore.buckets[bucketIndex].categories[categoryIndex]
         }
-    }
-}
-
-struct NotchView: View {
-    var body: some View {
-        RoundedRectangle(cornerRadius: 4)
-            .fill(Color.gray.opacity(0.4))
-            .frame(width: 8, height: 80)
-    }
-}
-
-struct ViewOffsetKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
     }
 }
 
