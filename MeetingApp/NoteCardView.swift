@@ -52,7 +52,7 @@ struct NoteCardView: View {
             ZStack(alignment: .topLeading) {
                 TextEditor(text: $noteContent)
                     .font(.body)
-                    .foregroundColor(.primary)
+                    .foregroundColor(themeManager.currentTheme.secondaryColor)
                     .padding(8)
                     .background(themeManager.currentTheme.noteCardBackgroundColor)
                     .cornerRadius(10)

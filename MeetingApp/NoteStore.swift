@@ -40,15 +40,17 @@ class Category: Identifiable, ObservableObject, Codable {
     var id = UUID()
     @Published var name: String
     @Published var notes: [Note]
+    @Published var iconColor: String
     
     enum CodingKeys: CodingKey {
-        case id, name, notes
+        case id, name, notes, iconColor
     }
     
-    init(id: UUID = UUID(), name: String, notes: [Note] = []) {
+    init(id: UUID = UUID(), name: String, notes: [Note] = [], iconColor: String = Color.gray.description) {
         self.id = id
         self.name = name
         self.notes = notes
+        self.iconColor = iconColor
     }
     
     // MARK: - Codable
@@ -57,6 +59,7 @@ class Category: Identifiable, ObservableObject, Codable {
         id = try container.decode(UUID.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         notes = try container.decode([Note].self, forKey: .notes)
+        iconColor = try container.decode(String.self, forKey: .iconColor)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -64,6 +67,7 @@ class Category: Identifiable, ObservableObject, Codable {
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(notes, forKey: .notes)
+        try container.encode(iconColor, forKey: .iconColor)
     }
 }
 
@@ -109,7 +113,7 @@ class ItemStore: ObservableObject {
         loadItems()
     }
     
-    // Theme Management
+    // Bucket Management
     func addBucket(_ bucket: Bucket) {
         buckets.append(bucket)
         saveItems()
@@ -158,7 +162,7 @@ class ItemStore: ObservableObject {
     func saveItems() {
         if let data = try? JSONEncoder().encode(buckets) {
             UserDefaults.standard.set(data, forKey: "buckets")
-            print("Bucket saved successfully.")
+            print("Buckets saved successfully.")
         }
     }
     
@@ -167,6 +171,17 @@ class ItemStore: ObservableObject {
            let decodedBuckets = try? JSONDecoder().decode([Bucket].self, from: data) {
             buckets = decodedBuckets
             print("Buckets loaded successfully: \(buckets)")
+        }
+    }
+    
+    // Extension for updating category icon color
+    func updateCategoryIconColor(bucketId: UUID, categoryId: UUID, iconColor: String) {
+        if let bucketIndex = buckets.firstIndex(where: { $0.id == bucketId }) {
+            if let categoryIndex = buckets[bucketIndex].categories.firstIndex(where: { $0.id == categoryId }) {
+                buckets[bucketIndex].categories[categoryIndex].iconColor = iconColor
+                saveItems()
+                objectWillChange.send()
+            }
         }
     }
 }

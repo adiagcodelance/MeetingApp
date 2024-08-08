@@ -13,6 +13,7 @@ struct HomeListView: View {
     @State private var menuVisible = false
     @State private var showSettings = false
     @State private var editingNoteID: UUID? = nil
+    @State private var showCalendarMenu = false
     
     var body: some View {
         ZStack {
@@ -25,6 +26,12 @@ struct HomeListView: View {
                         .padding(.top, 20) // Added top padding
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(themeManager.currentTheme.primaryColor)
+                    
+                    // Add a custom line below the title with specified thickness
+                    Rectangle()
+                        .frame(height: 2) // Adjust this value for thickness
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                        .padding(.horizontal, 30) // Align the rectangle with the text
                     
                     if let selectedCategory = selectedCategoryWrapper.category {
                         ScrollView {
@@ -69,6 +76,18 @@ struct HomeListView: View {
                     Spacer()
                 }
                 .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                        Button(action: {
+                            withAnimation {
+                                showCalendarMenu.toggle()
+                            }
+                        }) {
+                            Image(systemName: "calendar")
+                                .font(.title2)
+                                .padding()
+                                .foregroundColor(themeManager.currentTheme.primaryColor)
+                        }
+                    }
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Button(action: addNewNote) {
                             Image(systemName: "plus")
@@ -97,28 +116,38 @@ struct HomeListView: View {
                         }
                 )
             }
-            .disabled(menuVisible)
+            .disabled(menuVisible || showCalendarMenu)
             
             // Dismiss area
-            if menuVisible {
+            if menuVisible || showCalendarMenu {
                 Color.black.opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
                     .onTapGesture {
                         withAnimation {
                             menuVisible = false
+                            showCalendarMenu = false
                         }
                     }
             }
             
             // Side Menu
             HStack {
+                if showCalendarMenu {
+                    CalendarMenuView()
+                        .environmentObject(themeManager)
+                        .frame(width: 300)
+                        .background(themeManager.currentTheme.backgroundColor)
+                        .transition(.move(edge: .leading))
+                }
+                
                 Spacer()
-                SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
-                    .frame(width: 300)
-                    .background(themeManager.currentTheme.backgroundColor)
-                    .offset(x: menuVisible ? 0 : 320)
-                    .transition(.move(edge: .trailing))
-                    .zIndex(1)
+                
+                if menuVisible {
+                    SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
+                        .frame(width: 300)
+                        .background(themeManager.currentTheme.backgroundColor)
+                        .transition(.move(edge: .trailing))
+                }
             }
             .edgesIgnoringSafeArea(.all)
             
