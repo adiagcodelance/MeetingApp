@@ -1,4 +1,5 @@
 import SwiftUI
+import EventKit
 
 struct NoteCardView: View {
     @EnvironmentObject var themeManager: ThemeManager
@@ -9,6 +10,7 @@ struct NoteCardView: View {
     @Binding var isEditing: Bool
     @State private var isEditingName: Bool = false
     @State private var dynamicHeight: CGFloat = 100
+    @State private var showAddEventSheet = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -24,7 +26,19 @@ struct NoteCardView: View {
                     }
 
                 Spacer()
-
+                
+                Button(action: {
+                    showAddEventSheet = true
+                }) {
+                    Image(systemName: "calendar.badge.plus")
+                        .font(.headline)
+                        .padding()
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                }
+                .sheet(isPresented: $showAddEventSheet) {
+                    AddEventFromNoteView(noteTitle: noteName, noteContent: noteContent)
+                }
+                
                 Menu {
                     Button(action: {
                         withAnimation {
@@ -48,8 +62,15 @@ struct NoteCardView: View {
                 .font(.subheadline)
                 .foregroundColor(.gray)
                 .padding(.bottom, 5)
-
+            
             ZStack(alignment: .topLeading) {
+                if noteContent.isEmpty {
+                    Text("Enter your note content here...")
+                        .foregroundColor(themeManager.currentTheme.secondaryColor.opacity(0.5)) // Placeholder color
+                        .padding(.leading, 12)
+                        .padding(.top, 10)
+                }
+
                 TextEditor(text: $noteContent)
                     .font(.body)
                     .foregroundColor(themeManager.currentTheme.secondaryColor)
@@ -68,23 +89,11 @@ struct NoteCardView: View {
                     }
                     .scrollContentBackground(.hidden)
                     .disabled(!isEditing)
-                    .animation(.easeInOut, value: isEditing)
                     .onTapGesture {
                         withAnimation {
                             isEditing = true
                         }
                     }
-
-                Text(noteContent) // Mirror the content to calculate dynamic height
-                    .font(.body)
-                    .padding(8)
-                    .opacity(0) // Hide the mirrored content
-                    .background(
-                        GeometryReader { geometry in
-                            Color.clear
-                                .preference(key: ViewHeightKey.self, value: geometry.size.height)
-                        }
-                    )
             }
         }
         .padding()
@@ -103,6 +112,53 @@ struct NoteCardView: View {
                         }
                     }
         )
+    }
+}
+struct AddEventFromNoteView: View {
+    var noteTitle: String
+    var noteContent: String
+    @Environment(\.presentationMode) var presentationMode
+    @State private var eventTitle: String = ""
+    @State private var startDate: Date = Date()
+    @State private var endDate: Date = Date().addingTimeInterval(3600)
+    private let eventStore = EKEventStore()
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Event Details")) {
+                    TextField("Event Title", text: $eventTitle)
+                    DatePicker("Start Date", selection: $startDate)
+                    DatePicker("End Date", selection: $endDate)
+                }
+                Button("Add Event") {
+                    addEvent()
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+            .navigationBarTitle("Create Event", displayMode: .inline)
+            .navigationBarItems(trailing: Button("Cancel") {
+                presentationMode.wrappedValue.dismiss()
+            })
+            .onAppear {
+                eventTitle = noteTitle
+            }
+        }
+    }
+
+    private func addEvent() {
+        let event = EKEvent(eventStore: eventStore)
+        event.title = eventTitle.isEmpty ? noteTitle : eventTitle
+        event.startDate = startDate
+        event.endDate = endDate
+        event.notes = noteContent
+        event.calendar = eventStore.defaultCalendarForNewEvents
+        
+        do {
+            try eventStore.save(event, span: .thisEvent)
+        } catch {
+            print("Error saving event: \(error.localizedDescription)")
+        }
     }
 }
 

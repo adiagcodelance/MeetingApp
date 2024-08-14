@@ -14,24 +14,48 @@ struct HomeListView: View {
     @State private var showSettings = false
     @State private var editingNoteID: UUID? = nil
     @State private var showCalendarMenu = false
+    @State private var recentCategories: [Category] = []
     
     var body: some View {
         ZStack {
-            // Main content
             NavigationView {
                 VStack {
-                    Text("Notes")
-                        .font(.largeTitle)
-                        .padding(.horizontal, 30)
-                        .padding(.top, 20) // Added top padding
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                    HStack {
+                        Text("Notes")
+                            .font(.largeTitle)
+                            .padding(.leading, 30)
+                            .foregroundColor(themeManager.currentTheme.primaryColor)
+                        
+                        Spacer()
+                        
+                        if !recentCategories.isEmpty {
+                            Menu {
+                                ForEach(recentCategories.prefix(5), id: \.id) { category in
+                                    Button(action: {
+                                        selectCategory(category)
+                                    }) {
+                                        Text(category.name)
+                                            .foregroundColor(themeManager.currentTheme.primaryColor)
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "chevron.down")
+                                    .font(.title2)
+                                    .foregroundColor(themeManager.currentTheme.primaryColor)
+                            }
+                            .padding(.trailing, 30)
+                            .background(themeManager.currentTheme.backgroundColor)
+                            .cornerRadius(10)
+                            .shadow(color: themeManager.currentTheme.shadowColor, radius: 5, x: 0, y: 2)
+                        }
+                    }
+                    .padding(.top, 20)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    // Add a custom line below the title with specified thickness
                     Rectangle()
-                        .frame(height: 2) // Adjust this value for thickness
+                        .frame(height: 2)
                         .foregroundColor(themeManager.currentTheme.primaryColor)
-                        .padding(.horizontal, 30) // Align the rectangle with the text
+                        .padding(.horizontal, 30)
                     
                     if let selectedCategory = selectedCategoryWrapper.category {
                         ScrollView {
@@ -82,7 +106,7 @@ struct HomeListView: View {
                                 showCalendarMenu.toggle()
                             }
                         }) {
-                            Image(systemName: "calendar")
+                            Image(systemName: "line.horizontal.3")
                                 .font(.title2)
                                 .padding()
                                 .foregroundColor(themeManager.currentTheme.primaryColor)
@@ -115,10 +139,12 @@ struct HomeListView: View {
                             hideKeyboard()
                         }
                 )
+                .onAppear {
+                    loadLastSelectedCategory()
+                }
             }
             .disabled(menuVisible || showCalendarMenu)
             
-            // Dismiss area
             if menuVisible || showCalendarMenu {
                 Color.black.opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
@@ -130,28 +156,27 @@ struct HomeListView: View {
                     }
             }
             
-            // Side Menu
             HStack {
                 if showCalendarMenu {
                     CalendarMenuView()
                         .environmentObject(themeManager)
-                        .frame(width: 300)
+                        .frame(width: 280)
                         .background(themeManager.currentTheme.backgroundColor)
                         .transition(.move(edge: .leading))
+
                 }
                 
                 Spacer()
                 
                 if menuVisible {
                     SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
-                        .frame(width: 300)
+                        .frame(width: 280)
                         .background(themeManager.currentTheme.backgroundColor)
                         .transition(.move(edge: .trailing))
                 }
             }
             .edgesIgnoringSafeArea(.all)
             
-            // Settings View Overlay
             if showSettings {
                 Color.black.opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
@@ -172,11 +197,52 @@ struct HomeListView: View {
         .edgesIgnoringSafeArea(.all)
     }
     
+    
+    private func selectCategory(_ category: Category) {
+        selectedCategoryWrapper.category = category
+        selectedBucket = itemStore.buckets.first(where: { $0.categories.contains(where: { $0.id == category.id }) })
+        saveLastSelectedCategoryID(category.id)
+        updateRecentCategories(category)
+    }
+
+    private func loadLastSelectedCategory() {
+        print("Loading last selected category...")
+        
+        if let lastCategoryIdString = UserDefaults.standard.string(forKey: "LastSelectedCategoryID"),
+           let lastCategoryId = UUID(uuidString: lastCategoryIdString) {
+            for bucket in itemStore.buckets {
+                if let category = bucket.categories.first(where: { $0.id == lastCategoryId }) {
+                    print("Found last selected category: \(category.name)")
+                    selectedBucket = bucket
+                    DispatchQueue.main.async {
+                        selectedCategoryWrapper.category = category
+                        updateRecentCategories(category)
+                    }
+                    break
+                }
+            }
+        } else {
+            print("No last selected category found.")
+        }
+    }
+
+    private func saveLastSelectedCategoryID(_ categoryId: UUID?) {
+        if let categoryId = categoryId {
+            print("Saving last selected category ID: \(categoryId.uuidString)")
+            UserDefaults.standard.set(categoryId.uuidString, forKey: "LastSelectedCategoryID")
+        } else {
+            print("Removing last selected category ID.")
+            UserDefaults.standard.removeObject(forKey: "LastSelectedCategoryID")
+        }
+    }
+
     private func updateNoteName(_ newName: String, at noteIndex: Int, in category: Category) {
         if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == selectedBucket?.id }),
            let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == category.id }) {
             itemStore.buckets[bucketIndex].categories[categoryIndex].notes[noteIndex].name = newName
             itemStore.saveItems()
+            saveLastSelectedCategoryID(category.id)
+            updateRecentCategories(category)
         }
     }
     
@@ -185,6 +251,8 @@ struct HomeListView: View {
            let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == category.id }) {
             itemStore.buckets[bucketIndex].categories[categoryIndex].notes[noteIndex].content = newContent
             itemStore.saveItems()
+            saveLastSelectedCategoryID(category.id)
+            updateRecentCategories(category)
         }
     }
     
@@ -192,6 +260,7 @@ struct HomeListView: View {
         if let bucketId = selectedBucket?.id {
             itemStore.deleteNote(from: category.id, in: bucketId, noteId: noteId)
             updateSelectedCategory(bucketId: bucketId, categoryId: category.id)
+            updateRecentCategories(category)
         }
     }
     
@@ -201,6 +270,8 @@ struct HomeListView: View {
                 let newNote = Note(name: "Untitled", content: "Enter note content...")
                 itemStore.addNote(to: categoryId, in: bucketId, note: newNote)
                 updateSelectedCategory(bucketId: bucketId, categoryId: categoryId)
+                saveLastSelectedCategoryID(categoryId)
+                updateRecentCategories(selectedCategoryWrapper.category)
             }
         }
     }
@@ -210,6 +281,14 @@ struct HomeListView: View {
            let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == categoryId }) {
             selectedCategoryWrapper.category = itemStore.buckets[bucketIndex].categories[categoryIndex]
         }
+    }
+    
+    private func updateRecentCategories(_ category: Category?) {
+        guard let category = category else { return }
+        if let index = recentCategories.firstIndex(where: { $0.id == category.id }) {
+            recentCategories.remove(at: index)
+        }
+        recentCategories.insert(category, at: 0)
     }
 }
 

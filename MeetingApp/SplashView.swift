@@ -14,7 +14,7 @@ struct SplashView: View {
                 .ignoresSafeArea() // This ensures the color fills the entire screen
 
             VStack{
-                Text("Meeting Notes Prototype")
+                Text("Event Notes")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(50)

@@ -9,139 +9,205 @@ struct CalendarMenuView: View {
     @State private var showCalendarByMonth = false
     @State private var selectedEvent: EKEvent? = nil
     @State private var relatedNotes: String = ""
+    @State private var selectedTab: Tab = .calendar
+
+    enum Tab {
+        case calendar
+        case list
+    }
 
     var body: some View {
         NavigationView {
             VStack {
-                // Header with navigation buttons
+                // Custom Tab Bar
                 HStack {
                     Button(action: {
-                        withAnimation {
-                            selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) ?? Date()
-                            viewModel.fetchEvents(for: selectedDate)
+                        selectedTab = .calendar
+                    }) {
+                        VStack {
+                            Image(systemName: "calendar")
+                                .font(.title2)
+                            Text("Calendar")
+                                .font(.footnote)
                         }
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .padding()
-                            .foregroundColor(themeManager.currentTheme.primaryColor)
+                        .padding()
+                        .foregroundColor(selectedTab == .calendar ? themeManager.currentTheme.primaryColor : .gray)
                     }
-                    
-                    Spacer()
-                    
-                    Text(selectedDate, style: .date)
-                        .font(.headline)
-                        .foregroundColor(themeManager.currentTheme.primaryColor)
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        withAnimation {
-                            selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? Date()
-                            viewModel.fetchEvents(for: selectedDate)
-                        }
-                    }) {
-                        Image(systemName: "chevron.right")
-                            .padding()
-                            .foregroundColor(themeManager.currentTheme.primaryColor)
-                    }
-                }
-                .padding(.horizontal)
-                .background(themeManager.currentTheme.backgroundColor)
-                
-                // Today Button, Add Event Button, and Calendar by Month Button
-                HStack {
-                    Button(action: {
-                        selectedDate = Date()
-                        viewModel.fetchEvents(for: selectedDate)
-                    }) {
-                        Image(systemName: "calendar.day.timeline.leading")
-                            .font(.title2)
-                            .padding()
-                            .foregroundColor(themeManager.currentTheme.primaryColor)
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        showAddEventSheet = true
-                    }) {
-                        Image(systemName: "plus")
-                            .font(.title2)
-                            .padding()
-                            .foregroundColor(themeManager.currentTheme.primaryColor)
-                    }
-                    .sheet(isPresented: $showAddEventSheet) {
-                        AddEventView(viewModel: viewModel, selectedDate: $selectedDate)
-                    }
+                    .frame(maxWidth: .infinity)
 
-                    Spacer()
-                    
                     Button(action: {
-                        showCalendarByMonth = true
+                        selectedTab = .list
                     }) {
-                        CalendarMonthIcon(date: selectedDate)
-                            .font(.title2)
-                            .padding()
-                            .foregroundColor(themeManager.currentTheme.primaryColor)
-                    }
-                    .sheet(isPresented: $showCalendarByMonth) {
-                        CalendarByMonthView(viewModel: viewModel, selectedDate: $selectedDate, selectedEvent: $selectedEvent, relatedNotes: $relatedNotes)
-                    }
-                }
-                .padding(.horizontal)
-                
-                // Event List
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        ForEach(viewModel.events, id: \.eventIdentifier) { event in
-                            EventCardView(event: event)
-                                .padding(.vertical, 5)
-                                .onTapGesture {
-                                    selectedEvent = event
-                                    relatedNotes = viewModel.getRelatedNotes(for: event)
-                                }
+                        VStack {
+                            Image(systemName: "list.bullet")
+                                .font(.title2)
+                            Text("List")
+                                .font(.footnote)
                         }
+                        .padding()
+                        .foregroundColor(selectedTab == .list ? themeManager.currentTheme.primaryColor : .gray)
                     }
-                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity)
                 }
                 .background(themeManager.currentTheme.backgroundColor)
-                .onAppear {
-                    viewModel.fetchEvents(for: selectedDate)
-                }
+                .padding(.bottom, 10)
 
-                // Divider
-                Divider()
-                    .background(themeManager.currentTheme.primaryColor)
-                    .padding(.vertical, 10)
-                
-                // Related Notes
-                if let selectedEvent = selectedEvent {
-                    VStack(alignment: .leading) {
-                        Text("Related Notes")
-                            .font(.headline)
-                            .foregroundColor(themeManager.currentTheme.primaryColor)
-                            .padding(.leading)
-
-                        ScrollView {
-                            Text(relatedNotes)
-                                .padding()
-                                .background(themeManager.currentTheme.secondaryColor)
-                                .cornerRadius(10)
-                                .padding(.horizontal)
-                        }
-                        .background(themeManager.currentTheme.backgroundColor)
-                    }
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Calendar Events")
-                        .font(.headline)
-                        .foregroundColor(themeManager.currentTheme.primaryColor)
-                        .padding(.top, 20)
+                // Content Based on Selected Tab
+                if selectedTab == .calendar {
+                    calendarView
+                } else {
+                    listView
                 }
             }
             .background(themeManager.currentTheme.backgroundColor.edgesIgnoringSafeArea(.all))
+        }
+    }
+
+    // Calendar View
+    private var calendarView: some View {
+        VStack {
+            HStack {
+                Button(action: {
+                    withAnimation {
+                        selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) ?? Date()
+                        viewModel.fetchEvents(for: selectedDate)
+                    }
+                }) {
+                    Image(systemName: "chevron.left")
+                        .padding()
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                }
+                
+                Spacer()
+                
+                Text(selectedDate, style: .date)
+                    .font(.footnote)
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
+                
+                Spacer()
+                
+                Button(action: {
+                    withAnimation {
+                        selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? Date()
+                        viewModel.fetchEvents(for: selectedDate)
+                    }
+                }) {
+                    Image(systemName: "chevron.right")
+                        .padding()
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                }
+            }
+            .padding(.horizontal)
+            .background(themeManager.currentTheme.backgroundColor)
+            
+            // Today Button, Add Event Button, and Calendar by Month Button
+            HStack {
+                Button(action: {
+                    selectedDate = Date()
+                    viewModel.fetchEvents(for: selectedDate)
+                }) {
+                    Image(systemName: "calendar.day.timeline.leading")
+                        .font(.title3)
+                        .padding()
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    showAddEventSheet = true
+                }) {
+                    Image(systemName: "plus")
+                        .font(.title3)
+                        .padding()
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                }
+                .sheet(isPresented: $showAddEventSheet) {
+                    AddEventView(viewModel: viewModel, selectedDate: $selectedDate)
+                }
+
+                Spacer()
+                
+                Button(action: {
+                    showCalendarByMonth = true
+                }) {
+                    CalendarMonthIcon(date: selectedDate)
+                        .font(.title3)
+                        .padding()
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                }
+                .sheet(isPresented: $showCalendarByMonth) {
+                    CalendarByMonthView(viewModel: viewModel, selectedDate: $selectedDate, selectedEvent: $selectedEvent, relatedNotes: $relatedNotes)
+                }
+            }
+            .padding(.horizontal)
+            
+            // Event List
+            ScrollView {
+                VStack(alignment: .leading) {
+                    ForEach(viewModel.events, id: \.eventIdentifier) { event in
+                        EventCardView(event: event)
+                            .padding(.vertical, 5)
+                            .onTapGesture {
+                                selectedEvent = event
+                                relatedNotes = viewModel.getRelatedNotes(for: event)
+                            }
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .background(themeManager.currentTheme.backgroundColor)
+            .onAppear {
+                viewModel.fetchEvents(for: selectedDate)
+            }
+
+            Divider()
+                .background(themeManager.currentTheme.primaryColor)
+                .padding(.vertical, 10)
+            
+            // Related Notes
+            if selectedEvent != nil {
+                VStack(alignment: .leading) {
+                    Text("Related Notes")
+                        .font(.footnote)
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                        .padding(.leading)
+
+                    ScrollView {
+                        Text(relatedNotes)
+                            .font(.footnote)
+                            .padding()
+                            .background(themeManager.currentTheme.secondaryColor)
+                            .cornerRadius(10)
+                            .padding(.horizontal)
+                    }
+                    .background(themeManager.currentTheme.backgroundColor)
+                }
+            }
+        }
+    }
+
+    // List View
+    private var listView: some View {
+        VStack {
+            Text("Events List")
+                .font(.largeTitle)
+                .padding(.horizontal, 30)
+                .padding(.top, 20)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundColor(themeManager.currentTheme.primaryColor)
+
+            // List of Events
+            ScrollView {
+                VStack(alignment: .leading) {
+                    ForEach(viewModel.events, id: \.eventIdentifier) { event in
+                        EventCardView(event: event)
+                            .padding(.vertical, 5)
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .background(themeManager.currentTheme.backgroundColor)
         }
     }
 }
@@ -157,7 +223,7 @@ struct CalendarMonthIcon: View {
         VStack {
             Image(systemName: "calendar")
             Text(monthSymbols[month - 1].prefix(3))
-                .font(.caption)
+                .font(.footnote) // Smaller font size
         }
     }
 }
@@ -170,17 +236,17 @@ struct EventCardView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(event.startDate, style: .time)
-                    .font(.caption)
+                    .font(.footnote) // Smaller font size
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             }
             .frame(width: 80, alignment: .leading)
             
             VStack(alignment: .leading) {
                 Text(event.title ?? "No Title")
-                    .font(.subheadline)
+                    .font(.footnote) // Smaller font size
                     .foregroundColor(themeManager.currentTheme.primaryColor)
                 Text(event.startDate, style: .date)
-                    .font(.caption)
+                    .font(.footnote) // Smaller font size
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             }
             Spacer()
@@ -203,16 +269,20 @@ struct AddEventView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Event Details")) {
+                Section(header: Text("Event Details").font(.footnote)) { // Smaller font size
                     TextField("Title", text: $title)
+                        .font(.footnote) // Smaller font size
                     DatePicker("Start Date", selection: $startDate)
+                        .font(.footnote) // Smaller font size
                     DatePicker("End Date", selection: $endDate)
+                        .font(.footnote) // Smaller font size
                 }
                 Button("Add Event") {
                     viewModel.addEvent(title: title, startDate: startDate, endDate: endDate)
                     presentationMode.wrappedValue.dismiss()
                     viewModel.fetchEvents(for: selectedDate)
                 }
+                .font(.footnote) // Smaller font size
             }
             .navigationBarTitle("Add Event", displayMode: .inline)
             .navigationBarItems(trailing: Button("Cancel") {
@@ -258,7 +328,7 @@ struct CalendarByMonthView: View {
                 Spacer()
                 
                 Text(monthYearFormatter.string(from: selectedDate))
-                    .font(.headline)
+                    .font(.footnote)  // Smaller font size
                     .foregroundColor(themeManager.currentTheme.primaryColor)
                 
                 Spacer()
@@ -281,6 +351,7 @@ struct CalendarByMonthView: View {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: 7), spacing: 5) {
                 ForEach(daysInMonth, id: \.self) { day in
                     Text("\(Calendar.current.component(.day, from: day))")
+                        .font(.footnote)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(8)
                         .background(day == selectedDay ? themeManager.currentTheme.primaryColor : themeManager.currentTheme.backgroundColor)
@@ -298,10 +369,12 @@ struct CalendarByMonthView: View {
             }
             .padding(.horizontal)
             
+            Spacer() // Push the grid to the top
+
             // Divider
             Divider()
                 .background(themeManager.currentTheme.primaryColor)
-                .padding(.vertical, 10)
+                .padding(.vertical)
             
             // New Event Button
             HStack {
@@ -311,7 +384,7 @@ struct CalendarByMonthView: View {
                     showAddEventSheet = true
                 }) {
                     Image(systemName: "plus")
-                        .font(.title2)
+                        .font(.title3)
                         .padding()
                         .foregroundColor(themeManager.currentTheme.primaryColor)
                 }
@@ -327,7 +400,7 @@ struct CalendarByMonthView: View {
             if let selectedDay = selectedDay {
                 VStack(alignment: .leading) {
                     Text("Events")
-                        .font(.headline)
+                        .font(.footnote)  // Smaller font size
                         .foregroundColor(themeManager.currentTheme.primaryColor)
                         .padding(.leading)
                     
@@ -355,12 +428,13 @@ struct CalendarByMonthView: View {
                     if let selectedEvent = selectedEvent {
                         VStack(alignment: .leading) {
                             Text("Related Notes")
-                                .font(.headline)
+                                .font(.footnote)  // Smaller font size
                                 .foregroundColor(themeManager.currentTheme.primaryColor)
                                 .padding(.leading)
                             
                             ScrollView {
                                 Text(relatedNotes)
+                                    .font(.footnote)  // Smaller standard font size
                                     .padding()
                                     .background(themeManager.currentTheme.secondaryColor)
                                     .cornerRadius(10)
@@ -384,6 +458,7 @@ struct CalendarByMonthView: View {
         return formatter
     }
 }
+
 
 struct CalendarMenuView_Previews: PreviewProvider {
     static var previews: some View {

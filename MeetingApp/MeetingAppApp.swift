@@ -7,17 +7,31 @@ struct MeetingAppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HomeListView()
+            ContentViewWrapper()
                 .environmentObject(itemStore)
                 .environmentObject(themeManager)
+                .onAppear(perform: updateAppIcon)
+        }
+    }
+    
+    private func updateAppIcon() {
+        let iconName = (UITraitCollection.current.userInterfaceStyle == .dark) ? "AppIcon-Dark" : "AppIcon-Light"
+        if UIApplication.shared.alternateIconName != iconName {
+            UIApplication.shared.setAlternateIconName(iconName) { error in
+                if let error = error {
+                    print("Failed to set alternate app icon: \(error.localizedDescription)")
+                } else {
+                    print("App icon changed to \(iconName)")
+                }
+            }
         }
     }
 }
-import SwiftUI
 
 struct ContentViewWrapper: View {
     @State private var showSplash = true
-    
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         Group {
             if showSplash {
@@ -31,6 +45,25 @@ struct ContentViewWrapper: View {
                     }
             } else {
                 HomeListView()
+                    .onAppear {
+                        updateAppIcon(newColorScheme: colorScheme)
+                    }
+                    .onChange(of: colorScheme) { newColorScheme in
+                        updateAppIcon(newColorScheme: newColorScheme)
+                    }
+            }
+        }
+    }
+    
+    private func updateAppIcon(newColorScheme: ColorScheme) {
+        let iconName = (newColorScheme == .dark) ? "AppIcon-Dark" : "AppIcon-Light"
+        if UIApplication.shared.alternateIconName != iconName {
+            UIApplication.shared.setAlternateIconName(iconName) { error in
+                if let error = error {
+                    print("Failed to set alternate app icon: \(error.localizedDescription)")
+                } else {
+                    print("App icon changed to \(iconName)")
+                }
             }
         }
     }

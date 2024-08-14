@@ -6,25 +6,35 @@ class CalendarViewModel: ObservableObject {
     private let eventStore = EKEventStore()
 
     func fetchEvents(for date: Date) {
-        let calendar = Calendar.current
-        let startDate = calendar.startOfDay(for: date)
-        let endDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
+        DispatchQueue.global(qos: .userInitiated).async {
+            let calendar = Calendar.current
+            let startDate = calendar.startOfDay(for: date)
+            let endDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
 
-        let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: nil)
-        events = eventStore.events(matching: predicate).sorted { $0.startDate < $1.startDate }
+            let predicate = self.eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: nil)
+            let fetchedEvents = self.eventStore.events(matching: predicate).sorted { $0.startDate < $1.startDate }
+            
+            DispatchQueue.main.async {
+                self.events = fetchedEvents
+            }
+        }
     }
 
     func addEvent(title: String, startDate: Date, endDate: Date) {
-        let event = EKEvent(eventStore: eventStore)
-        event.title = title
-        event.startDate = startDate
-        event.endDate = endDate
-        event.calendar = eventStore.defaultCalendarForNewEvents
-        do {
-            try eventStore.save(event, span: .thisEvent)
-            fetchEvents(for: startDate)
-        } catch {
-            print("Error saving event: \(error)")
+        DispatchQueue.global(qos: .userInitiated).async {
+            let event = EKEvent(eventStore: self.eventStore)
+            event.title = title
+            event.startDate = startDate
+            event.endDate = endDate
+            event.calendar = self.eventStore.defaultCalendarForNewEvents
+            do {
+                try self.eventStore.save(event, span: .thisEvent)
+                
+                // Fetch events again to update the list
+                self.fetchEvents(for: startDate)
+            } catch {
+                print("Error saving event: \(error)")
+            }
         }
     }
 

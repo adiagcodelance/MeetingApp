@@ -19,68 +19,50 @@ struct SideMenuView: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 40)
                 .fill(themeManager.currentTheme.backgroundColor)
                 .shadow(color: themeManager.currentTheme.shadowColor, radius: 10, x: 0, y: 5)
+                .onTapGesture {
+                    withAnimation {
+                        endEditing()
+                    }
+                }
 
             VStack(alignment: .leading) {
                 headerView
                 Divider()
-                    .background(themeManager.currentTheme.primaryColor) // Customize the color if needed
-                    .padding(.horizontal, 5) // Add horizontal padding if needed
+                    .background(themeManager.currentTheme.primaryColor)
+                    .padding(.horizontal, 5)
                     .padding(.bottom, 20)
 
                 Text("Buckets")
-                    .font(.headline)
+                    .font(.system(size: 16))
                     .foregroundColor(themeManager.currentTheme.primaryColor)
                     .padding(.leading, 20)
-                
+
                 bucketsList
                     .padding(.top, 5)
                 
                 Spacer()
             }
-            .frame(width: 320) // Increase the frame width
-            .padding() // Add padding inside the rounded rectangle
+            .padding()
         }
         .edgesIgnoringSafeArea(.vertical)
         .gesture(
-            TapGesture()
-                .onEnded {
-                    // Quit editing mode when tapping outside the text fields
+            DragGesture()
+                .onEnded { _ in
                     withAnimation {
-                        isEditingBucket = false
-                        isEditingCategory = false
+                        endEditing()
                     }
                 }
         )
-        .sheet(isPresented: $showIconPicker) {
-            IconPickerView(selectedIconColor: $selectedIconColor, showIconPicker: $showIconPicker)
-                .environmentObject(themeManager) // Provide the ThemeManager environment object
-                .onDisappear {
-                    // Update the icon color for the category when the picker is dismissed
-                    if let selectedBucket = selectedBucket,
-                       let selectedCategory = selectedCategory {
-                        itemStore.updateCategoryIconColor(bucketId: selectedBucket.id, categoryId: selectedCategory.id, iconColor: selectedIconColor)
-                    }
-                }
-        }
     }
-    
+
     private var headerView: some View {
         HStack {
-            Button(action: {
-                withAnimation {
-                    let newBucket = Bucket(name: "Untitled Bucket")
-                    itemStore.addBucket(newBucket)
-                    selectedBucket = newBucket
-                    selectedCategory = nil
-                    editingBucketId = newBucket.id
-                    isEditingBucket = true
-                }
-            }) {
+            Button(action: addNewBucket) {
                 Image(systemName: "plus")
-                    .font(.title2)
+                    .font(.system(size: 16))
                     .padding()
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             }
@@ -89,13 +71,9 @@ struct SideMenuView: View {
             
             Spacer()
             
-            Button(action: {
-                withAnimation {
-                    showSettings.toggle()
-                }
-            }) {
+            Button(action: { withAnimation { showSettings.toggle() } }) {
                 Image(systemName: "gearshape")
-                    .font(.title2)
+                    .font(.system(size: 16))
                     .padding()
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             }
@@ -122,153 +100,207 @@ struct SideMenuView: View {
     private func bucketHeader(for bucket: Bucket) -> some View {
         HStack {
             if isEditingBucket && editingBucketId == bucket.id {
-                TextField("Bucket Name", text: $newBucketName, onCommit: {
-                    if let index = itemStore.buckets.firstIndex(where: { $0.id == bucket.id }) {
-                        itemStore.buckets[index].name = newBucketName
-                        itemStore.saveItems()
-                    }
-                    withAnimation {
-                        isEditingBucket = false
-                    }
-                })
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.vertical, 5)
-                .onAppear {
-                    newBucketName = bucket.name
-                }
-                .foregroundColor(themeManager.currentTheme.primaryColor)
+                TextField("Bucket Name", text: $newBucketName, onCommit: { saveBucketName(for: bucket) })
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.vertical, 5)
+                    .onAppear { newBucketName = bucket.name }
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
             } else {
                 Text(bucket.name)
-                    .font(.headline)
-                    .padding(.vertical, 3)
+                    .font(.system(size: 14))
                     .foregroundColor(themeManager.currentTheme.primaryColor)
-                    .onTapGesture {
-                        withAnimation {
-                            selectedBucket = bucket
-                            selectedCategory = nil
-                            menuVisible = false
-                        }
-                    }
+                    .padding(.vertical, 3)
+                    .onTapGesture { selectBucket(bucket) }
             }
             Spacer()
             HStack {
-                Button(action: {
-                    withAnimation {
-                        let newCategory = Category(name: "Untitled Category")
-                        if let index = itemStore.buckets.firstIndex(where: { $0.id == bucket.id }) {
-                            itemStore.addCategory(to: itemStore.buckets[index].id, category: newCategory)
-                            selectedCategory = newCategory
-                            editingCategoryId = newCategory.id
-                            isEditingCategory = true
-                        }
-                    }
-                }) {
-                    Image(systemName: "plus")
-                        .font(.title2)
-                        .padding()
-                        .foregroundColor(themeManager.currentTheme.primaryColor)
-                }
-                Menu {
-                    Button(action: {
-                        withAnimation {
-                            editingBucketId = bucket.id
-                            isEditingBucket = true
-                        }
-                    }) {
-                        Label("Rename", systemImage: "pencil")
-                    }
-                    Button(action: {
-                        withAnimation {
-                            itemStore.deleteBucket(bucketId: bucket.id)
-                            selectedBucket = nil
-                            selectedCategory = nil
-                        }
-                    }) {
-                        Label("Delete", systemImage: "trash")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.title2)
-                        .foregroundColor(themeManager.currentTheme.primaryColor)
-                        .padding(.trailing, -8)
-                }
+                addCategoryButton(for: bucket)
+                bucketOptionsMenu(for: bucket)
             }
             .padding(.trailing)
         }
-        .background(selectedBucket?.id == bucket.id ? themeManager.currentTheme.secondaryColor.opacity(0.2) : Color.clear)
         .cornerRadius(8)
     }
     
     private func categoryRow(for category: Category, in bucket: Bucket) -> some View {
         HStack {
-            Image(systemName: "folder") // Display the category icon
+            Image(systemName: "folder")
                 .foregroundColor(Color(UIColor(hex: category.iconColor) ?? .gray))
                 .padding(.trailing, 5)
             if isEditingCategory && editingCategoryId == category.id {
-                TextField("Category Name", text: $newCategoryName, onCommit: {
-                    if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == bucket.id }),
-                       let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == category.id }) {
-                        itemStore.buckets[bucketIndex].categories[categoryIndex].name = newCategoryName
-                        itemStore.saveItems()
-                    }
-                    withAnimation {
-                        isEditingCategory = false
-                    }
-                })
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.vertical, 3)
-                .onAppear {
-                    newCategoryName = category.name
-                }
-                .foregroundColor(themeManager.currentTheme.primaryColor)
+                TextField("Category Name", text: $newCategoryName, onCommit: { saveCategoryName(for: category, in: bucket) })
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.vertical, 3)
+                    .onAppear { newCategoryName = category.name }
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
             } else {
                 Text(category.name)
+                    .font(.system(size: 14))
                     .foregroundColor(themeManager.currentTheme.primaryColor)
-                    .onTapGesture {
-                        withAnimation {
-                            selectedCategory = category
-                            selectedBucket = bucket
-                            menuVisible = false
-                        }
-                    }
+                    .onTapGesture { selectCategory(category, in: bucket) }
             }
             Spacer()
-            Menu {
-                Button(action: {
-                    withAnimation {
-                        editingCategoryId = category.id
-                        isEditingCategory = true
-                    }
-                }) {
-                    Label("Rename", systemImage: "pencil")
-                }
-                Button(action: {
-                    withAnimation {
-                        itemStore.deleteCategory(from: bucket.id, categoryId: category.id)
-                        selectedCategory = nil
-                    }
-                }) {
-                    Label("Delete", systemImage: "trash")
-                }
-                Button(action: {
-                    selectedCategory = category
-                    showIconPicker.toggle()
-                }) {
-                    Label("Change Icon Color", systemImage: "star")
-                }
-            } label: {
-                Image(systemName: "ellipsis")
-                    .font(.title2)
-                    .foregroundColor(themeManager.currentTheme.primaryColor)
+            categoryOptionsMenu(for: category, in: bucket)
+        }
+        .padding(.all, 5)
+        .background(selectedCategory?.id == category.id ? themeManager.currentTheme.secondaryColor.opacity(0.2) : themeManager.currentTheme.backgroundColor)
+        .cornerRadius(12)
+        .padding(.horizontal, 5)
+    }
+    
+    private func addNewBucket() {
+        withAnimation {
+            let newBucket = Bucket(name: "Untitled Bucket")
+            itemStore.addBucket(newBucket)
+            selectedBucket = newBucket
+            selectedCategory = nil
+            editingBucketId = newBucket.id
+            isEditingBucket = true
+        }
+    }
+    
+    private func saveBucketName(for bucket: Bucket) {
+        if let index = itemStore.buckets.firstIndex(where: { $0.id == bucket.id }) {
+            itemStore.buckets[index].name = newBucketName
+            itemStore.saveItems()
+        }
+        withAnimation { isEditingBucket = false }
+    }
+    
+    private func saveCategoryName(for category: Category, in bucket: Bucket) {
+        if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == bucket.id }),
+           let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == category.id }) {
+            itemStore.buckets[bucketIndex].categories[categoryIndex].name = newCategoryName
+            itemStore.saveItems()
+        }
+        withAnimation { isEditingCategory = false }
+    }
+    
+    private func addCategoryButton(for bucket: Bucket) -> some View {
+        Button(action: { addNewCategory(to: bucket) }) {
+            Image(systemName: "plus")
+                .font(.title2)
+                .padding()
+                .foregroundColor(themeManager.currentTheme.primaryColor)
+        }
+    }
+    
+    private func addNewCategory(to bucket: Bucket) {
+        withAnimation {
+            let newCategory = Category(name: "Untitled Category")
+            if let index = itemStore.buckets.firstIndex(where: { $0.id == bucket.id }) {
+                itemStore.addCategory(to: itemStore.buckets[index].id, category: newCategory)
+                selectedCategory = newCategory
+                saveLastSelectedCategoryID(newCategory.id) // Save selected category
+                editingCategoryId = newCategory.id
+                isEditingCategory = true
             }
         }
-        .background(selectedCategory?.id == category.id ? themeManager.currentTheme.secondaryColor.opacity(0.2) : themeManager.currentTheme.backgroundColor)
-        .cornerRadius(8)
-        .padding(.trailing, 8) // Adjust this padding to align the buttons
+    }
+    
+    private func bucketOptionsMenu(for bucket: Bucket) -> some View {
+        Menu {
+            Button(action: { withAnimation { editingBucketId = bucket.id; isEditingBucket = true } }) {
+                Label("Rename", systemImage: "pencil")
+            }
+            Button(action: { withAnimation { deleteBucket(bucket) } }) {
+                Label("Delete", systemImage: "trash")
+            }
+        } label: {
+            Image(systemName: "ellipsis")
+                .font(.title2)
+                .foregroundColor(themeManager.currentTheme.primaryColor)
+                .padding(12)
+                .contentShape(Rectangle())
+        }
+    }
+
+    
+    private func deleteBucket(_ bucket: Bucket) {
+        withAnimation {
+            itemStore.deleteBucket(bucketId: bucket.id)
+            selectedBucket = nil
+            selectedCategory = nil
+        }
+    }
+    
+    private func categoryOptionsMenu(for category: Category, in bucket: Bucket) -> some View {
+        Menu {
+            Button(action: { withAnimation { editingCategoryId = category.id; isEditingCategory = true } }) {
+                Label("Rename", systemImage: "pencil")
+            }
+            Button(action: { withAnimation { deleteCategory(category, in: bucket) } }) {
+                Label("Delete", systemImage: "trash")
+            }
+            Button(action: {
+                selectedCategory = category
+                showIconPicker.toggle()
+            }) {
+                Label("Change Icon Color", systemImage: "star")
+            }
+        } label: {
+            Image(systemName: "ellipsis")
+                .font(.title2)
+                .foregroundColor(themeManager.currentTheme.primaryColor)
+                .padding(12)
+                .contentShape(Rectangle())
+        }
+    }
+
+    
+    private func deleteCategory(_ category: Category, in bucket: Bucket) {
+        withAnimation {
+            itemStore.deleteCategory(from: bucket.id, categoryId: category.id)
+            selectedCategory = nil
+        }
+    }
+    
+    private func selectBucket(_ bucket: Bucket) {
+        withAnimation {
+            selectedBucket = bucket
+            selectedCategory = nil
+            menuVisible = false
+        }
+    }
+    
+    private func selectCategory(_ category: Category, in bucket: Bucket) {
+        withAnimation {
+            selectedCategory = category
+            selectedBucket = bucket
+            saveLastSelectedCategoryID(category.id) // Save selected category
+            menuVisible = false
+        }
+    }
+    
+    private func updateCategoryIconColor() {
+        if let selectedBucket = selectedBucket,
+           let selectedCategory = selectedCategory {
+            itemStore.updateCategoryIconColor(bucketId: selectedBucket.id, categoryId: selectedCategory.id, iconColor: selectedIconColor)
+        }
+    }
+    
+    private func endEditing() {
+        if isEditingBucket, let editingBucketId = editingBucketId {
+            saveBucketName(for: itemStore.buckets.first { $0.id == editingBucketId }!)
+        }
+        if isEditingCategory, let editingCategoryId = editingCategoryId, let selectedBucket = selectedBucket {
+            saveCategoryName(for: selectedBucket.categories.first { $0.id == editingCategoryId }!, in: selectedBucket)
+        }
+        isEditingBucket = false
+        isEditingCategory = false
+    }
+    
+    private func saveLastSelectedCategoryID(_ categoryId: UUID?) {
+        if let categoryId = categoryId {
+            print("Saving last selected category ID: \(categoryId.uuidString)")
+            UserDefaults.standard.set(categoryId.uuidString, forKey: "LastSelectedCategoryID")
+        } else {
+            print("Removing last selected category ID.")
+            UserDefaults.standard.removeObject(forKey: "LastSelectedCategoryID")
+        }
     }
 }
 
-// Utility extension to convert hex string to UIColor
 extension UIColor {
     convenience init?(hex: String) {
         let r, g, b, a: CGFloat
