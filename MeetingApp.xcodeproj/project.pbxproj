@@ -564,13 +564,13 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"MeetingApp/Preview Content\"";
 				DEVELOPMENT_TEAM = 3X7X6F638L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MeetingApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Meeting Notes";
+				INFOPLIST_KEY_CFBundleDisplayName = "Event Notes";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "We need access to your calendar to show your events.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to use speech-to-text";
@@ -583,7 +583,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Prototype.MeetingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -601,13 +601,13 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"MeetingApp/Preview Content\"";
 				DEVELOPMENT_TEAM = 3X7X6F638L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MeetingApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Meeting Notes";
+				INFOPLIST_KEY_CFBundleDisplayName = "Event Notes";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "We need access to your calendar to show your events.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to use speech-to-text";
@@ -620,7 +620,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Prototype.MeetingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
