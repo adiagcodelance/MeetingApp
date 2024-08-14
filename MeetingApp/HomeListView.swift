@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import EventKit
 
 class SelectedCategoryWrapper: ObservableObject {
     @Published var category: Category?
@@ -25,6 +26,18 @@ struct HomeListView: View {
                             .font(.largeTitle)
                             .padding(.leading, 30)
                             .foregroundColor(themeManager.currentTheme.primaryColor)
+                            .onAppear {
+                                requestCalendarAccess { granted in
+                                    if granted {
+                                        print("Calendar access granted")
+                                        // Proceed with accessing calendar data
+                                    } else {
+                                        print("Calendar access denied")
+                                        // Handle the denial appropriately
+                                    }
+                                }
+                            }
+
                         
                         Spacer()
                         
@@ -289,6 +302,21 @@ struct HomeListView: View {
             recentCategories.remove(at: index)
         }
         recentCategories.insert(category, at: 0)
+    }
+}
+
+func requestCalendarAccess(completion: @escaping (Bool) -> Void) {
+    let eventStore = EKEventStore()
+
+    eventStore.requestAccess(to: .event) { granted, error in
+        DispatchQueue.main.async {
+            if let error = error {
+                print("Failed to request access to calendar: \(error.localizedDescription)")
+                completion(false)
+            } else {
+                completion(granted)
+            }
+        }
     }
 }
 

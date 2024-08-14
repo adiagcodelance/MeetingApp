@@ -124,6 +124,7 @@ class ItemStore: ObservableObject {
         saveItems()
     }
     
+    
     // Category Management
     func addCategory(to bucketId: UUID, category: Category) {
         if let bucketIndex = buckets.firstIndex(where: { $0.id == bucketId }) {

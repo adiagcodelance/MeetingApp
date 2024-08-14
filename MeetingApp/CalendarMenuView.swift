@@ -10,6 +10,8 @@ struct CalendarMenuView: View {
     @State private var selectedEvent: EKEvent? = nil
     @State private var relatedNotes: String = ""
     @State private var selectedTab: Tab = .calendar
+    
+    
 
     enum Tab {
         case calendar
@@ -17,8 +19,10 @@ struct CalendarMenuView: View {
     }
 
     var body: some View {
+        
         NavigationView {
             VStack {
+                
                 // Custom Tab Bar
                 HStack {
                     Button(action: {
