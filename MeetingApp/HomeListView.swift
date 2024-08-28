@@ -75,6 +75,13 @@ struct HomeListView: View {
                                         .font(.title3)
                                         .foregroundColor(themeManager.currentTheme.primaryColor)
                                         .padding(.top, 20)
+                                    Button(action: addNewNote) {
+                                        Image(systemName: "plus")
+                                            .font(.largeTitle)
+                                            .padding(.top, 50)
+                                            .padding(.leading, 160)
+                                            .foregroundColor(themeManager.currentTheme.primaryColor)
+                                    }
                                 }
                                 ForEach(selectedCategory.notes.indices, id: \.self) { noteIndex in
                                     let note = selectedCategory.notes[noteIndex]
