@@ -36,7 +36,7 @@ struct SideMenuView: View {
                     .padding(.bottom, 20)
 
                 Text("Buckets")
-                    .font(.system(size: 16))
+                    .font(.system(size: 14))
                     .foregroundColor(themeManager.currentTheme.primaryColor)
                     .padding(.leading, 20)
 
@@ -73,7 +73,7 @@ struct SideMenuView: View {
             
             Button(action: { withAnimation { showSettings.toggle() } }) {
                 Image(systemName: "gearshape")
-                    .font(.system(size: 16))
+                    .font(.system(size: 14))
                     .padding()
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             }
@@ -107,7 +107,7 @@ struct SideMenuView: View {
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             } else {
                 Text(bucket.name)
-                    .font(.system(size: 14))
+                    .font(.system(size: 12))
                     .foregroundColor(themeManager.currentTheme.primaryColor)
                     .padding(.vertical, 3)
                     .onTapGesture { selectBucket(bucket) }
@@ -115,6 +115,12 @@ struct SideMenuView: View {
             Spacer()
             HStack {
                 addCategoryButton(for: bucket)
+                Button(action: { withAnimation { deleteBucket(bucket) } }) {
+                    Image(systemName: "trash")
+                        .font(.title2)
+                        .padding()
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                }
                 bucketOptionsMenu(for: bucket)
             }
             .padding(.trailing)
@@ -135,11 +141,18 @@ struct SideMenuView: View {
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             } else {
                 Text(category.name)
-                    .font(.system(size: 14))
+                    .font(.system(size: 12))
                     .foregroundColor(themeManager.currentTheme.primaryColor)
                     .onTapGesture { selectCategory(category, in: bucket) }
             }
             Spacer()
+            //Need to check why thi button might not be working
+            Button(action: { withAnimation { deleteCategory(category, in: bucket)} }) {
+                Image(systemName: "trash")
+                    .font(.title2)
+                    .padding()
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
+            }
             categoryOptionsMenu(for: category, in: bucket)
         }
         .padding(.all, 5)

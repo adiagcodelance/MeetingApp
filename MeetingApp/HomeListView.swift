@@ -5,7 +5,6 @@ import EventKit
 class SelectedCategoryWrapper: ObservableObject {
     @Published var category: Category?
 }
-
 struct HomeListView: View {
     @EnvironmentObject var itemStore: ItemStore
     @EnvironmentObject var themeManager: ThemeManager
@@ -30,15 +29,11 @@ struct HomeListView: View {
                                 requestCalendarAccess { granted in
                                     if granted {
                                         print("Calendar access granted")
-                                        // Proceed with accessing calendar data
                                     } else {
                                         print("Calendar access denied")
-                                        // Handle the denial appropriately
                                     }
                                 }
                             }
-
-                        
                         Spacer()
                         
                         if !recentCategories.isEmpty {
@@ -52,13 +47,15 @@ struct HomeListView: View {
                                     }
                                 }
                             } label: {
+                                Text("Recent Category")
+                                    .font(.title3)
+                                    .foregroundColor(themeManager.currentTheme.primaryColor)
                                 Image(systemName: "chevron.down")
-                                    .font(.title2)
+                                    .padding(.trailing)
                                     .foregroundColor(themeManager.currentTheme.primaryColor)
                             }
-                            .padding(.trailing, 30)
-                            .background(themeManager.currentTheme.backgroundColor)
-                            .cornerRadius(10)
+                            .padding(.trailing, 10)
+                           // .background(themeManager.currentTheme.backgroundColor)
                             .shadow(color: themeManager.currentTheme.shadowColor, radius: 5, x: 0, y: 2)
                         }
                     }
@@ -73,6 +70,12 @@ struct HomeListView: View {
                     if let selectedCategory = selectedCategoryWrapper.category {
                         ScrollView {
                             VStack(alignment: .leading) {
+                                if(selectedCategory.notes .isEmpty){
+                                    Text("Click The Plus Button To Add A New Note")
+                                        .font(.title3)
+                                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                                        .padding(.top, 20)
+                                }
                                 ForEach(selectedCategory.notes.indices, id: \.self) { noteIndex in
                                     let note = selectedCategory.notes[noteIndex]
                                     NoteCardView(
@@ -144,7 +147,7 @@ struct HomeListView: View {
                         }
                     }
                 }
-                .background(themeManager.currentTheme.backgroundColor)
+                    .background(themeManager.currentTheme.backgroundColor)
                 .gesture(
                     TapGesture()
                         .onEnded {
@@ -176,14 +179,13 @@ struct HomeListView: View {
                         .frame(width: 280)
                         .background(themeManager.currentTheme.backgroundColor)
                         .transition(.move(edge: .leading))
-
                 }
                 
                 Spacer()
                 
                 if menuVisible {
                     SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
-                        .frame(width: 280)
+                        .frame(width: 350)
                         .background(themeManager.currentTheme.backgroundColor)
                         .transition(.move(edge: .trailing))
                 }

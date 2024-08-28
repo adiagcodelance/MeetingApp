@@ -160,6 +160,7 @@ struct CalendarMenuView: View {
                 }
                 .padding(.horizontal)
             }
+            // below line could potentially control the background color of the event tabs
             .background(themeManager.currentTheme.backgroundColor)
             .onAppear {
                 viewModel.fetchEvents(for: selectedDate)
@@ -181,6 +182,7 @@ struct CalendarMenuView: View {
                         Text(relatedNotes)
                             .font(.footnote)
                             .padding()
+                        //line below controls the background color of the related noted data.
                             .background(themeManager.currentTheme.secondaryColor)
                             .cornerRadius(10)
                             .padding(.horizontal)
@@ -192,6 +194,7 @@ struct CalendarMenuView: View {
     }
 
     // List View
+    //The idea behind this is too create a todo list of sorts that will allow us to track our todos, we also want to be able to relate notes to it to create a notes related todo.
     private var listView: some View {
         VStack {
             Text("Events List")
@@ -261,6 +264,8 @@ struct EventCardView: View {
         .frame(maxWidth: .infinity)
     }
 }
+
+// This is the add new calendar event function we need to modify it so when we select a date and time it auto fills the to date as the same date and the time increments by 1 hour.
 
 struct AddEventView: View {
     @ObservedObject var viewModel: CalendarViewModel
@@ -429,6 +434,7 @@ struct CalendarByMonthView: View {
                         .padding(.vertical, 10)
                     
                     // Related Notes
+                    // Need to add actual related notes data here so user can see the related note for the event
                     if let selectedEvent = selectedEvent {
                         VStack(alignment: .leading) {
                             Text("Related Notes")
@@ -444,12 +450,14 @@ struct CalendarByMonthView: View {
                                     .cornerRadius(10)
                                     .padding(.horizontal)
                             }
+                            //this also controls the background color of the related noted tabs
                             .background(themeManager.currentTheme.backgroundColor)
                         }
                     }
                 }
             }
         }
+        //check what this does.
         .background(themeManager.currentTheme.backgroundColor.edgesIgnoringSafeArea(.all))
         .onAppear {
             viewModel.fetchEvents(for: selectedDate)

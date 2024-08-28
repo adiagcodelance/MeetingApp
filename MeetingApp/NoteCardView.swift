@@ -73,9 +73,9 @@ struct NoteCardView: View {
 
                 TextEditor(text: $noteContent)
                     .font(.body)
-                    .foregroundColor(themeManager.currentTheme.secondaryColor)
+                    .foregroundColor(themeManager.currentTheme.primaryColor)
                     .padding(8)
-                    .background(themeManager.currentTheme.noteCardBackgroundColor)
+                    //.background(themeManager.currentTheme.noteCardBackgroundColor)
                     .cornerRadius(10)
                     .frame(minHeight: dynamicHeight)
                     .background(
@@ -97,12 +97,12 @@ struct NoteCardView: View {
             }
         }
         .padding()
-        .background(themeManager.currentTheme.noteCardBackgroundColor)
+        //.background(themeManager.currentTheme.noteCardBackgroundColor)
         .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(themeManager.currentTheme.borderColor, lineWidth: 1)
-        )
+        //.overlay(
+           // RoundedRectangle(cornerRadius: 8)
+              //  .stroke(themeManager.currentTheme.borderColor, lineWidth: 1)
+        //)
         .shadow(color: themeManager.currentTheme.shadowColor, radius: 10, x: 0, y: 5) // Apply soft shadow
         .gesture(DragGesture()
                     .onChanged { _ in
@@ -114,6 +114,10 @@ struct NoteCardView: View {
         )
     }
 }
+
+//Below this comment we want to possible add keyboard related features that we can sepcifically assign to the note such as formatting, etc. one main feature is to relate the text this indicator is placed next to to become a todo using that line as todo data of sorts.
+
+
 struct AddEventFromNoteView: View {
     var noteTitle: String
     var noteContent: String
