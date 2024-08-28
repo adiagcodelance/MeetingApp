@@ -70,6 +70,7 @@ struct HomeListView: View {
                     if let selectedCategory = selectedCategoryWrapper.category {
                         ScrollView {
                             VStack(alignment: .leading) {
+                                //Simple Message if notes exist in category.
                                 if(selectedCategory.notes .isEmpty){
                                     Text("Click The Plus Button To Add A New Note")
                                         .font(.title3)
