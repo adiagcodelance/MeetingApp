@@ -53,25 +53,45 @@ struct AppTheme: Identifiable, Codable, Equatable {
         return lhs.id == rhs.id
     }
     
-    static let defaultTheme = AppTheme(name: "Default", primaryColor: .blue, secondaryColor: .green, backgroundColor: .white, noteCardBackgroundColor: .white, borderColor: .white, shadowColor: Color.black.opacity(0.1))
-    static let darkTheme = AppTheme(name: "Dark", primaryColor: .white, secondaryColor: .gray, backgroundColor: .black, noteCardBackgroundColor: .black, borderColor: .white, shadowColor: Color.black.opacity(0.1))
-    static let lightTheme = AppTheme(name: "Light", primaryColor: .black, secondaryColor: .blue, backgroundColor: .white, noteCardBackgroundColor: .white, borderColor: .white, shadowColor: Color.black.opacity(0.1))
-    static let babyBlueTheme = AppTheme(name: "Baby Blue", primaryColor: .black, secondaryColor: Color(hex: "#D0D8E5"), backgroundColor: Color(hex: "#EEF3FA"), noteCardBackgroundColor: Color(hex: "#E7EEF5"), borderColor: .white, shadowColor: Color.black.opacity(0.6))
-    static let  darkNeuro = AppTheme(name: "Dark Neuro", primaryColor: Color(hex: "#4B0082"), // Dark purple
-                                     secondaryColor: Color(hex: "#9370DB"), // Medium purple
-                                     backgroundColor: Color(hex: "#E6E6FA"), // Lavender
-                                     noteCardBackgroundColor: Color(hex: "#D8BFD8"), // Thistle
-                                     borderColor: Color.white.opacity(0.8), // Soft white
-                                     shadowColor: Color.black.opacity(0.1))
-    static let blackOrangeNeuro = AppTheme(
-        name: "Black Orange Neuro",
-        primaryColor: Color(hex: "#FFA500"), // Orange
-        secondaryColor: Color(hex: "#FFFFFF"), // White
-        backgroundColor: Color(hex: "#1C1C1C"), // Almost Black for Neuromorphic background
-        noteCardBackgroundColor: Color(hex: "#2C2C2C"), // Dark Gray for note cards
-        borderColor: Color.white.opacity(0.2), // Soft white border for contrast
-        shadowColor: Color.black.opacity(0.2) // Deeper shadow for Neuromorphism
-    )
+    static let defaultTheme = AppTheme(
+            name: "Default",
+            primaryColor: .blue,
+            secondaryColor: .green,
+            backgroundColor: .white,
+            noteCardBackgroundColor: .white,
+            borderColor: .white,
+            shadowColor: Color.black.opacity(0.1)
+        )
+
+        static let darkTheme = AppTheme(
+            name: "Dark",
+            primaryColor: .white,
+            secondaryColor: .gray,
+            backgroundColor: .black,
+            noteCardBackgroundColor: Color(hex: "#1C1C1C"), // Dark Gray for note cards
+            borderColor: .white,
+            shadowColor: Color.black.opacity(0.2) // Slightly stronger shadow for dark mode
+        )
+
+        static let lightTheme = AppTheme(
+            name: "Light",
+            primaryColor: .black,
+            secondaryColor: .blue,
+            backgroundColor: .white,
+            noteCardBackgroundColor: .white,
+            borderColor: Color.black.opacity(0.1), // Subtle border for light mode
+            shadowColor: Color.black.opacity(0.1)
+        )
+
+        static let blackOrangeNeuro = AppTheme(
+            name: "Black Orange Neuro",
+            primaryColor: Color(hex: "#FFA500"), // Orange
+            secondaryColor: Color(hex: "#FFFFFF"), // White
+            backgroundColor: Color(hex: "#1C1C1C"), // Almost Black for Neuromorphic background
+            noteCardBackgroundColor: Color(hex: "#2C2C2C"), // Dark Gray for note cards
+            borderColor: Color.white.opacity(0.2), // Soft white border for contrast
+            shadowColor: Color.black.opacity(0.2) // Deeper shadow for Neuromorphism
+        )
 }
 
 // Color extension for Hex conversion

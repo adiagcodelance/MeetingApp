@@ -259,7 +259,7 @@ struct EventCardView: View {
             Spacer()
         }
         .padding()
-        .background(themeManager.currentTheme.secondaryColor)
+        .background(themeManager.currentTheme.backgroundColor)
         .cornerRadius(10)
         .frame(maxWidth: .infinity)
     }

@@ -47,23 +47,18 @@ struct SideMenuView: View {
             }
             .padding()
         }
+        .dismissKeyboardOnSwipeDown {
+            endEditing()
+        }
         .edgesIgnoringSafeArea(.vertical)
-        .gesture(
-            DragGesture()
-                .onEnded { _ in
-                    withAnimation {
-                        endEditing()
-                    }
-                }
-        )
     }
 
     private var headerView: some View {
         HStack {
             Button(action: addNewBucket) {
                 Image(systemName: "plus")
-                    .font(.system(size: 16))
-                    .padding()
+                    .font(.system(size: 14)) // Reduced font size
+                    .padding(8) // Reduced padding
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             }
             .padding(.leading, 20)
@@ -73,8 +68,8 @@ struct SideMenuView: View {
             
             Button(action: { withAnimation { showSettings.toggle() } }) {
                 Image(systemName: "gearshape")
-                    .font(.system(size: 14))
-                    .padding()
+                    .font(.system(size: 12)) // Reduced font size
+                    .padding(8) // Reduced padding
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             }
             .padding(.trailing, 20)
@@ -117,8 +112,8 @@ struct SideMenuView: View {
                 addCategoryButton(for: bucket)
                 Button(action: { withAnimation { deleteBucket(bucket) } }) {
                     Image(systemName: "trash")
-                        .font(.title2)
-                        .padding()
+                        .font(.system(size: 14)) // Reduced font size
+                        .padding(8) // Reduced padding
                         .foregroundColor(themeManager.currentTheme.primaryColor)
                 }
                 bucketOptionsMenu(for: bucket)
@@ -131,8 +126,10 @@ struct SideMenuView: View {
     private func categoryRow(for category: Category, in bucket: Bucket) -> some View {
         HStack {
             Image(systemName: "folder")
+                .font(.system(size: 14)) // Adjusted icon size
                 .foregroundColor(Color(UIColor(hex: category.iconColor) ?? .gray))
                 .padding(.trailing, 5)
+            
             if isEditingCategory && editingCategoryId == category.id {
                 TextField("Category Name", text: $newCategoryName, onCommit: { saveCategoryName(for: category, in: bucket) })
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -145,14 +142,17 @@ struct SideMenuView: View {
                     .foregroundColor(themeManager.currentTheme.primaryColor)
                     .onTapGesture { selectCategory(category, in: bucket) }
             }
+            
             Spacer()
-            //Need to check why thi button might not be working
-            Button(action: { withAnimation { deleteCategory(category, in: bucket)} }) {
+            
+            Button(action: { withAnimation { deleteCategory(category, in: bucket) } }) {
                 Image(systemName: "trash")
-                    .font(.title2)
-                    .padding()
+                    .font(.system(size: 14)) // Reduced font size
+                    .padding(8) // Reduced padding
                     .foregroundColor(themeManager.currentTheme.primaryColor)
             }
+            .buttonStyle(BorderlessButtonStyle())
+            
             categoryOptionsMenu(for: category, in: bucket)
         }
         .padding(.all, 5)
@@ -160,7 +160,7 @@ struct SideMenuView: View {
         .cornerRadius(12)
         .padding(.horizontal, 5)
     }
-    
+
     private func addNewBucket() {
         withAnimation {
             let newBucket = Bucket(name: "Untitled Bucket")

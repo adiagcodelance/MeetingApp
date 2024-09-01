@@ -7,7 +7,7 @@ struct ThemesListView: View {
 
     var body: some View {
         List {
-            ForEach([AppTheme.defaultTheme, AppTheme.darkTheme, AppTheme.lightTheme, AppTheme.babyBlueTheme, AppTheme.darkNeuro, AppTheme.blackOrangeNeuro]) { theme in
+            ForEach([AppTheme.defaultTheme, AppTheme.darkTheme, AppTheme.lightTheme, AppTheme.blackOrangeNeuro]) { theme in
                 HStack {
                     Text(theme.name)
                         .foregroundColor(themeManager.currentTheme.primaryColor)

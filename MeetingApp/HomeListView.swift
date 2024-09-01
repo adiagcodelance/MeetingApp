@@ -5,6 +5,7 @@ import EventKit
 class SelectedCategoryWrapper: ObservableObject {
     @Published var category: Category?
 }
+
 struct HomeListView: View {
     @EnvironmentObject var itemStore: ItemStore
     @EnvironmentObject var themeManager: ThemeManager
@@ -15,7 +16,7 @@ struct HomeListView: View {
     @State private var editingNoteID: UUID? = nil
     @State private var showCalendarMenu = false
     @State private var recentCategories: [Category] = []
-    
+
     var body: some View {
         ZStack {
             NavigationView {
@@ -55,23 +56,21 @@ struct HomeListView: View {
                                     .foregroundColor(themeManager.currentTheme.primaryColor)
                             }
                             .padding(.trailing, 10)
-                           // .background(themeManager.currentTheme.backgroundColor)
                             .shadow(color: themeManager.currentTheme.shadowColor, radius: 5, x: 0, y: 2)
                         }
                     }
                     .padding(.top, 20)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    
+
                     Rectangle()
                         .frame(height: 2)
                         .foregroundColor(themeManager.currentTheme.primaryColor)
                         .padding(.horizontal, 30)
-                    
+
                     if let selectedCategory = selectedCategoryWrapper.category {
                         ScrollView {
                             VStack(alignment: .leading) {
-                                //Simple Message if notes exist in category.
-                                if(selectedCategory.notes .isEmpty){
+                                if selectedCategory.notes.isEmpty {
                                     Text("Click The Plus Button To Add A New Note")
                                         .font(.title3)
                                         .foregroundColor(themeManager.currentTheme.primaryColor)
@@ -83,45 +82,58 @@ struct HomeListView: View {
                                             .padding(.leading, 160)
                                             .foregroundColor(themeManager.currentTheme.primaryColor)
                                     }
-                                }
-                                ForEach(selectedCategory.notes.indices, id: \.self) { noteIndex in
-                                    let note = selectedCategory.notes[noteIndex]
-                                    NoteCardView(
-                                        noteName: Binding(
-                                            get: { note.name },
-                                            set: { newName in
-                                                updateNoteName(newName, at: noteIndex, in: selectedCategory)
-                                            }
-                                        ),
-                                        noteContent: Binding(
-                                            get: { note.content },
-                                            set: { newContent in
-                                                updateNoteContent(newContent, at: noteIndex, in: selectedCategory)
-                                            }
-                                        ),
-                                        createdDate: note.createdDate,
-                                        onDelete: {
-                                            deleteNote(note.id, from: selectedCategory)
-                                        },
-                                        isEditing: Binding(
-                                            get: { editingNoteID == note.id },
-                                            set: { newValue in
-                                                editingNoteID = newValue ? note.id : nil
-                                            }
+                                } else {
+                                    ForEach(selectedCategory.notes.indices, id: \.self) { noteIndex in
+                                        let note = selectedCategory.notes[noteIndex]
+                                        NoteCardView(
+                                            noteName: Binding(
+                                                get: { note.name },
+                                                set: { newName in
+                                                    updateNoteName(newName, at: noteIndex, in: selectedCategory)
+                                                }
+                                            ),
+                                            noteContent: Binding(
+                                                get: { note.content },
+                                                set: { newContent in
+                                                    updateNoteContent(newContent, at: noteIndex, in: selectedCategory)
+                                                }
+                                            ),
+                                            createdDate: note.createdDate,
+                                            onDelete: {
+                                                deleteNote(note.id, from: selectedCategory)
+                                            },
+                                            isEditing: Binding(
+                                                get: { editingNoteID == note.id },
+                                                set: { newValue in
+                                                    editingNoteID = newValue ? note.id : nil
+                                                }
+                                            )
                                         )
-                                    )
-                                    .padding(.top, 20)
+                                    }
                                 }
                             }
                             .padding(.horizontal)
+                            .gesture(DragGesture().onEnded { value in
+                                if value.translation.height > 0 {
+                                    hideKeyboard()
+                                }
+                            })
                         }
                     } else {
                         Text("Select a category to view notes.")
                             .padding()
                             .foregroundColor(themeManager.currentTheme.secondaryColor)
                     }
-                    
+
                     Spacer()
+                }
+                .dismissKeyboardOnSwipeDown {
+                    if let editingNoteID = editingNoteID, let category = selectedCategoryWrapper.category {
+                        if let noteIndex = category.notes.firstIndex(where: { $0.id == editingNoteID }) {
+                            updateNoteContent(category.notes[noteIndex].content, at: noteIndex, in: category)
+                        }
+                        self.editingNoteID = nil
+                    }
                 }
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
@@ -155,7 +167,7 @@ struct HomeListView: View {
                         }
                     }
                 }
-                    .background(themeManager.currentTheme.backgroundColor)
+                .background(themeManager.currentTheme.backgroundColor)
                 .gesture(
                     TapGesture()
                         .onEnded {
@@ -168,7 +180,7 @@ struct HomeListView: View {
                 }
             }
             .disabled(menuVisible || showCalendarMenu)
-            
+
             if menuVisible || showCalendarMenu {
                 Color.black.opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
@@ -179,7 +191,7 @@ struct HomeListView: View {
                         }
                     }
             }
-            
+
             HStack {
                 if showCalendarMenu {
                     CalendarMenuView()
@@ -188,9 +200,9 @@ struct HomeListView: View {
                         .background(themeManager.currentTheme.backgroundColor)
                         .transition(.move(edge: .leading))
                 }
-                
+
                 Spacer()
-                
+
                 if menuVisible {
                     SideMenuView(selectedBucket: $selectedBucket, selectedCategory: $selectedCategoryWrapper.category, menuVisible: $menuVisible, showSettings: $showSettings)
                         .frame(width: 350)
@@ -199,14 +211,14 @@ struct HomeListView: View {
                 }
             }
             .edgesIgnoringSafeArea(.all)
-            
+
             if showSettings {
                 Color.black.opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
                     .onTapGesture {
                         showSettings = false
                     }
-                
+
                 SettingsView(menuVisible: $menuVisible, showSettings: $showSettings)
                     .environmentObject(themeManager)
                     .frame(width: 300, height: 500)
@@ -219,8 +231,7 @@ struct HomeListView: View {
         }
         .edgesIgnoringSafeArea(.all)
     }
-    
-    
+
     private func selectCategory(_ category: Category) {
         selectedCategoryWrapper.category = category
         selectedBucket = itemStore.buckets.first(where: { $0.categories.contains(where: { $0.id == category.id }) })
@@ -268,7 +279,7 @@ struct HomeListView: View {
             updateRecentCategories(category)
         }
     }
-    
+
     private func updateNoteContent(_ newContent: String, at noteIndex: Int, in category: Category) {
         if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == selectedBucket?.id }),
            let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == category.id }) {
@@ -278,7 +289,7 @@ struct HomeListView: View {
             updateRecentCategories(category)
         }
     }
-    
+
     private func deleteNote(_ noteId: UUID, from category: Category) {
         if let bucketId = selectedBucket?.id {
             itemStore.deleteNote(from: category.id, in: bucketId, noteId: noteId)
@@ -286,26 +297,30 @@ struct HomeListView: View {
             updateRecentCategories(category)
         }
     }
-    
+
     private func addNewNote() {
         if let bucketId = selectedBucket?.id, let categoryId = selectedCategoryWrapper.category?.id {
             withAnimation {
-                let newNote = Note(name: "Untitled", content: "Enter note content...")
-                itemStore.addNote(to: categoryId, in: bucketId, note: newNote)
-                updateSelectedCategory(bucketId: bucketId, categoryId: categoryId)
-                saveLastSelectedCategoryID(categoryId)
-                updateRecentCategories(selectedCategoryWrapper.category)
+                let newNote = Note(name: "Untitled", content: "")
+                if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == bucketId }),
+                   let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == categoryId }) {
+                    itemStore.buckets[bucketIndex].categories[categoryIndex].notes.insert(newNote, at: 0)
+                    itemStore.saveItems()
+                    updateSelectedCategory(bucketId: bucketId, categoryId: categoryId)
+                    saveLastSelectedCategoryID(categoryId)
+                    updateRecentCategories(selectedCategoryWrapper.category)
+                }
             }
         }
     }
-    
+
     private func updateSelectedCategory(bucketId: UUID, categoryId: UUID) {
         if let bucketIndex = itemStore.buckets.firstIndex(where: { $0.id == bucketId }),
            let categoryIndex = itemStore.buckets[bucketIndex].categories.firstIndex(where: { $0.id == categoryId }) {
             selectedCategoryWrapper.category = itemStore.buckets[bucketIndex].categories[categoryIndex]
         }
     }
-    
+
     private func updateRecentCategories(_ category: Category?) {
         guard let category = category else { return }
         if let index = recentCategories.firstIndex(where: { $0.id == category.id }) {

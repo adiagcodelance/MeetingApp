@@ -28,6 +28,9 @@
 		811DC8622C61553200C1B01E /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */; };
 		811DC8632C61553200C1B01E /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */; };
 		811DC8642C61553200C1B01E /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */; };
+		8180EE0A2C8324CE002976A1 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE092C8324CE002976A1 /* ViewExtensions.swift */; };
+		8180EE0B2C8324CE002976A1 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE092C8324CE002976A1 /* ViewExtensions.swift */; };
+		8180EE0C2C8324CE002976A1 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE092C8324CE002976A1 /* ViewExtensions.swift */; };
 		81B94D042C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
 		81B94D052C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
 		81B94D062C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
@@ -89,6 +92,7 @@
 		811DC8592C613C3100C1B01E /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		811DC85D2C613C7700C1B01E /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extensions.swift"; sourceTree = "<group>"; };
+		8180EE092C8324CE002976A1 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		81B94D032C5D184D009D2ED5 /* SetupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFormView.swift; sourceTree = "<group>"; };
 		81B94D072C5D40FF009D2ED5 /* HomeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeListView.swift; sourceTree = "<group>"; };
 		81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteStore.swift; sourceTree = "<group>"; };
@@ -178,6 +182,7 @@
 				811DC8162C5F036A00C1B01E /* SideMenuView.swift */,
 				811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */,
 				81F10BCC2C5BE7020030631B /* MeetingAppApp.swift */,
+				8180EE092C8324CE002976A1 /* ViewExtensions.swift */,
 				81D340972C64027800D72253 /* CalendarViewModel.swift */,
 				81F10BFA2C5C9B230030631B /* SetupView.swift */,
 				81B94D032C5D184D009D2ED5 /* SetupFormView.swift */,
@@ -360,6 +365,7 @@
 				81F10BCD2C5BE7020030631B /* MeetingAppApp.swift in Sources */,
 				81B94D042C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
 				81B94D102C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
+				8180EE0A2C8324CE002976A1 /* ViewExtensions.swift in Sources */,
 				81D3408B2C63E3B900D72253 /* IconPickerView.swift in Sources */,
 				811DC8222C5FF59A00C1B01E /* SideMenuView.swift in Sources */,
 				81B94D082C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
@@ -390,6 +396,7 @@
 				811DC8392C60259D00C1B01E /* SettingsView.swift in Sources */,
 				81D340A22C643C9800D72253 /* CalendarGridView.swift in Sources */,
 				81B94D092C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
+				8180EE0B2C8324CE002976A1 /* ViewExtensions.swift in Sources */,
 				81B94D112C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
 				811DC85F2C613C7800C1B01E /* ThemeManager.swift in Sources */,
 				81B94D052C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
@@ -414,6 +421,7 @@
 				81D3409A2C64027800D72253 /* CalendarViewModel.swift in Sources */,
 				81F10BE82C5BE7040030631B /* MeetingAppUITests.swift in Sources */,
 				811DC85C2C613C3100C1B01E /* AppTheme.swift in Sources */,
+				8180EE0C2C8324CE002976A1 /* ViewExtensions.swift in Sources */,
 				81D340A32C643C9800D72253 /* CalendarGridView.swift in Sources */,
 				81D340912C63FFDD00D72253 /* CalendarMenuView.swift in Sources */,
 				811DC8602C613C7800C1B01E /* ThemeManager.swift in Sources */,
