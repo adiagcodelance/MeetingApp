@@ -5,16 +5,20 @@ class Note: Identifiable, ObservableObject, Codable {
     var id = UUID()
     @Published var name: String
     @Published var content: String
+    @Published var imageData: Data? // For image storage
+    @Published var imageName: String // For the image name
     var createdDate: Date
     
     enum CodingKeys: CodingKey {
-        case id, name, content, createdDate
+        case id, name, content, imageData, imageName, createdDate
     }
     
-    init(id: UUID = UUID(), name: String, content: String, createdDate: Date = Date()) {
+    init(id: UUID = UUID(), name: String, content: String, imageData: Data? = nil, imageName: String = "", createdDate: Date = Date()) {
         self.id = id
         self.name = name
         self.content = content
+        self.imageData = imageData
+        self.imageName = imageName
         self.createdDate = createdDate
     }
     
@@ -24,6 +28,8 @@ class Note: Identifiable, ObservableObject, Codable {
         id = try container.decode(UUID.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         content = try container.decode(String.self, forKey: .content)
+        imageData = try container.decodeIfPresent(Data.self, forKey: .imageData)
+        imageName = try container.decode(String.self, forKey: .imageName)
         createdDate = try container.decode(Date.self, forKey: .createdDate)
     }
     
@@ -32,6 +38,8 @@ class Note: Identifiable, ObservableObject, Codable {
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(content, forKey: .content)
+        try container.encode(imageData, forKey: .imageData)
+        try container.encode(imageName, forKey: .imageName)
         try container.encode(createdDate, forKey: .createdDate)
     }
 }
@@ -124,7 +132,6 @@ class ItemStore: ObservableObject {
         saveItems()
     }
     
-    
     // Category Management
     func addCategory(to bucketId: UUID, category: Category) {
         if let bucketIndex = buckets.firstIndex(where: { $0.id == bucketId }) {
@@ -149,6 +156,15 @@ class ItemStore: ObservableObject {
             }
         }
     }
+    func updateNoteImageData(for noteId: UUID, in categoryId: UUID, in bucketId: UUID, with imageData: Data?) {
+           if let bucketIndex = buckets.firstIndex(where: { $0.id == bucketId }),
+              let categoryIndex = buckets[bucketIndex].categories.firstIndex(where: { $0.id == categoryId }),
+              let noteIndex = buckets[bucketIndex].categories[categoryIndex].notes.firstIndex(where: { $0.id == noteId }) {
+               buckets[bucketIndex].categories[categoryIndex].notes[noteIndex].imageData = imageData
+               saveItems()
+               objectWillChange.send() // Notify observers of the change
+           }
+       }
     
     func deleteNote(from categoryId: UUID, in bucketId: UUID, noteId: UUID) {
         if let bucketIndex = buckets.firstIndex(where: { $0.id == bucketId }) {
@@ -163,17 +179,22 @@ class ItemStore: ObservableObject {
     func saveItems() {
         if let data = try? JSONEncoder().encode(buckets) {
             UserDefaults.standard.set(data, forKey: "buckets")
-            print("Buckets saved successfully.")
+            print("Data saved: \(buckets)") // Debug: Check what's being saved
+        } else {
+            print("Failed to encode data for saving.")
         }
     }
-    
+
     private func loadItems() {
         if let data = UserDefaults.standard.data(forKey: "buckets"),
            let decodedBuckets = try? JSONDecoder().decode([Bucket].self, from: data) {
             buckets = decodedBuckets
-            print("Buckets loaded successfully: \(buckets)")
+            print("Data loaded: \(buckets)") // Debug: Check what's being loaded
+        } else {
+            print("Failed to load data.")
         }
     }
+
     
     // Extension for updating category icon color
     func updateCategoryIconColor(bucketId: UUID, categoryId: UUID, iconColor: String) {

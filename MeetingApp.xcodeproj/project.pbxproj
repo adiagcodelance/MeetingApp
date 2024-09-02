@@ -31,6 +31,15 @@
 		8180EE0A2C8324CE002976A1 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE092C8324CE002976A1 /* ViewExtensions.swift */; };
 		8180EE0B2C8324CE002976A1 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE092C8324CE002976A1 /* ViewExtensions.swift */; };
 		8180EE0C2C8324CE002976A1 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE092C8324CE002976A1 /* ViewExtensions.swift */; };
+		8180EE0E2C842906002976A1 /* CameraButtonToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE0D2C842906002976A1 /* CameraButtonToolbarView.swift */; };
+		8180EE0F2C842906002976A1 /* CameraButtonToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE0D2C842906002976A1 /* CameraButtonToolbarView.swift */; };
+		8180EE102C842906002976A1 /* CameraButtonToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE0D2C842906002976A1 /* CameraButtonToolbarView.swift */; };
+		8180EE122C8429C1002976A1 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE112C8429C1002976A1 /* ImagePicker.swift */; };
+		8180EE132C8429C1002976A1 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE112C8429C1002976A1 /* ImagePicker.swift */; };
+		8180EE142C8429C1002976A1 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE112C8429C1002976A1 /* ImagePicker.swift */; };
+		8180EE1A2C847459002976A1 /* KeyboardResponsiveModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE192C847459002976A1 /* KeyboardResponsiveModifier.swift */; };
+		8180EE1B2C847459002976A1 /* KeyboardResponsiveModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE192C847459002976A1 /* KeyboardResponsiveModifier.swift */; };
+		8180EE1C2C847459002976A1 /* KeyboardResponsiveModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8180EE192C847459002976A1 /* KeyboardResponsiveModifier.swift */; };
 		81B94D042C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
 		81B94D052C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
 		81B94D062C5D184D009D2ED5 /* SetupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B94D032C5D184D009D2ED5 /* SetupFormView.swift */; };
@@ -57,6 +66,12 @@
 		81D340A12C643C9700D72253 /* CalendarGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D340A02C643C9700D72253 /* CalendarGridView.swift */; };
 		81D340A22C643C9800D72253 /* CalendarGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D340A02C643C9700D72253 /* CalendarGridView.swift */; };
 		81D340A32C643C9800D72253 /* CalendarGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D340A02C643C9700D72253 /* CalendarGridView.swift */; };
+		81DEF4E52C8596CE00B01A19 /* FullImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DEF4E42C8596CE00B01A19 /* FullImageView.swift */; };
+		81DEF4E62C8596CE00B01A19 /* FullImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DEF4E42C8596CE00B01A19 /* FullImageView.swift */; };
+		81DEF4E72C8596CE00B01A19 /* FullImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DEF4E42C8596CE00B01A19 /* FullImageView.swift */; };
+		81DEF4E92C85B52600B01A19 /* Cameraview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DEF4E82C85B52600B01A19 /* Cameraview.swift */; };
+		81DEF4EA2C85B52600B01A19 /* Cameraview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DEF4E82C85B52600B01A19 /* Cameraview.swift */; };
+		81DEF4EB2C85B52600B01A19 /* Cameraview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DEF4E82C85B52600B01A19 /* Cameraview.swift */; };
 		81F10BCD2C5BE7020030631B /* MeetingAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F10BCC2C5BE7020030631B /* MeetingAppApp.swift */; };
 		81F10BD42C5BE7040030631B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 81F10BD32C5BE7040030631B /* Preview Assets.xcassets */; };
 		81F10BDE2C5BE7040030631B /* MeetingAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F10BDD2C5BE7040030631B /* MeetingAppTests.swift */; };
@@ -93,6 +108,9 @@
 		811DC85D2C613C7700C1B01E /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extensions.swift"; sourceTree = "<group>"; };
 		8180EE092C8324CE002976A1 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		8180EE0D2C842906002976A1 /* CameraButtonToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraButtonToolbarView.swift; sourceTree = "<group>"; };
+		8180EE112C8429C1002976A1 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		8180EE192C847459002976A1 /* KeyboardResponsiveModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponsiveModifier.swift; sourceTree = "<group>"; };
 		81B94D032C5D184D009D2ED5 /* SetupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFormView.swift; sourceTree = "<group>"; };
 		81B94D072C5D40FF009D2ED5 /* HomeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeListView.swift; sourceTree = "<group>"; };
 		81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteStore.swift; sourceTree = "<group>"; };
@@ -104,6 +122,8 @@
 		81D340972C64027800D72253 /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
 		81D3409F2C641AF100D72253 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		81D340A02C643C9700D72253 /* CalendarGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarGridView.swift; sourceTree = "<group>"; };
+		81DEF4E42C8596CE00B01A19 /* FullImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullImageView.swift; sourceTree = "<group>"; };
+		81DEF4E82C85B52600B01A19 /* Cameraview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cameraview.swift; sourceTree = "<group>"; };
 		81F10BC92C5BE7020030631B /* MeetingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81F10BCC2C5BE7020030631B /* MeetingAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingAppApp.swift; sourceTree = "<group>"; };
 		81F10BD32C5BE7040030631B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -180,17 +200,22 @@
 			children = (
 				81D3409F2C641AF100D72253 /* Info.plist */,
 				811DC8162C5F036A00C1B01E /* SideMenuView.swift */,
+				8180EE192C847459002976A1 /* KeyboardResponsiveModifier.swift */,
 				811DC8612C61553200C1B01E /* UIApplication+Extensions.swift */,
 				81F10BCC2C5BE7020030631B /* MeetingAppApp.swift */,
 				8180EE092C8324CE002976A1 /* ViewExtensions.swift */,
 				81D340972C64027800D72253 /* CalendarViewModel.swift */,
 				81F10BFA2C5C9B230030631B /* SetupView.swift */,
+				81DEF4E82C85B52600B01A19 /* Cameraview.swift */,
+				8180EE0D2C842906002976A1 /* CameraButtonToolbarView.swift */,
+				81DEF4E42C8596CE00B01A19 /* FullImageView.swift */,
 				81B94D032C5D184D009D2ED5 /* SetupFormView.swift */,
 				811DC85D2C613C7700C1B01E /* ThemeManager.swift */,
 				81D3408A2C63E3B900D72253 /* IconPickerView.swift */,
 				81F10BF82C5C5A9D0030631B /* SplashView.swift */,
 				81B94D072C5D40FF009D2ED5 /* HomeListView.swift */,
 				811DC8372C60259D00C1B01E /* SettingsView.swift */,
+				8180EE112C8429C1002976A1 /* ImagePicker.swift */,
 				811DC83B2C6025F400C1B01E /* ThemeListView.swift */,
 				811DC8592C613C3100C1B01E /* AppTheme.swift */,
 				81B94D0F2C5D6A68009D2ED5 /* NoteStore.swift */,
@@ -364,6 +389,7 @@
 				811DC8622C61553200C1B01E /* UIApplication+Extensions.swift in Sources */,
 				81F10BCD2C5BE7020030631B /* MeetingAppApp.swift in Sources */,
 				81B94D042C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
+				8180EE1A2C847459002976A1 /* KeyboardResponsiveModifier.swift in Sources */,
 				81B94D102C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
 				8180EE0A2C8324CE002976A1 /* ViewExtensions.swift in Sources */,
 				81D3408B2C63E3B900D72253 /* IconPickerView.swift in Sources */,
@@ -371,12 +397,16 @@
 				81B94D082C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
 				811DC85E2C613C7800C1B01E /* ThemeManager.swift in Sources */,
 				81D340982C64027800D72253 /* CalendarViewModel.swift in Sources */,
+				81DEF4E92C85B52600B01A19 /* Cameraview.swift in Sources */,
 				81F10BFB2C5C9B230030631B /* SetupView.swift in Sources */,
 				81F10BF92C5C5A9D0030631B /* SplashView.swift in Sources */,
 				81D3408F2C63FFDD00D72253 /* CalendarMenuView.swift in Sources */,
+				8180EE0E2C842906002976A1 /* CameraButtonToolbarView.swift in Sources */,
+				81DEF4E52C8596CE00B01A19 /* FullImageView.swift in Sources */,
 				811DC8382C60259D00C1B01E /* SettingsView.swift in Sources */,
 				81D340A12C643C9700D72253 /* CalendarGridView.swift in Sources */,
 				811DC85A2C613C3100C1B01E /* AppTheme.swift in Sources */,
+				8180EE122C8429C1002976A1 /* ImagePicker.swift in Sources */,
 				811DC83C2C6025F400C1B01E /* ThemeListView.swift in Sources */,
 				81B94D202C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */,
 			);
@@ -388,11 +418,16 @@
 			files = (
 				811DC8632C61553200C1B01E /* UIApplication+Extensions.swift in Sources */,
 				81B94D212C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */,
+				8180EE0F2C842906002976A1 /* CameraButtonToolbarView.swift in Sources */,
+				81DEF4E62C8596CE00B01A19 /* FullImageView.swift in Sources */,
+				81DEF4EA2C85B52600B01A19 /* Cameraview.swift in Sources */,
+				8180EE132C8429C1002976A1 /* ImagePicker.swift in Sources */,
 				811DC83D2C6025F400C1B01E /* ThemeListView.swift in Sources */,
 				811DC8182C5F036A00C1B01E /* SideMenuView.swift in Sources */,
 				811DC85B2C613C3100C1B01E /* AppTheme.swift in Sources */,
 				81D3408C2C63E3B900D72253 /* IconPickerView.swift in Sources */,
 				81D340992C64027800D72253 /* CalendarViewModel.swift in Sources */,
+				8180EE1B2C847459002976A1 /* KeyboardResponsiveModifier.swift in Sources */,
 				811DC8392C60259D00C1B01E /* SettingsView.swift in Sources */,
 				81D340A22C643C9800D72253 /* CalendarGridView.swift in Sources */,
 				81B94D092C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
@@ -412,12 +447,17 @@
 				811DC83E2C6025F400C1B01E /* ThemeListView.swift in Sources */,
 				81B94D062C5D184D009D2ED5 /* SetupFormView.swift in Sources */,
 				811DC8642C61553200C1B01E /* UIApplication+Extensions.swift in Sources */,
+				8180EE102C842906002976A1 /* CameraButtonToolbarView.swift in Sources */,
+				8180EE1C2C847459002976A1 /* KeyboardResponsiveModifier.swift in Sources */,
 				81B94D0A2C5D40FF009D2ED5 /* HomeListView.swift in Sources */,
 				81F10BEA2C5BE7040030631B /* MeetingAppUITestsLaunchTests.swift in Sources */,
+				81DEF4EB2C85B52600B01A19 /* Cameraview.swift in Sources */,
 				81B94D222C5D8FA2009D2ED5 /* NoteCardView.swift in Sources */,
+				8180EE142C8429C1002976A1 /* ImagePicker.swift in Sources */,
 				811DC83A2C60259D00C1B01E /* SettingsView.swift in Sources */,
 				81B94D122C5D6A68009D2ED5 /* NoteStore.swift in Sources */,
 				811DC8192C5F036A00C1B01E /* SideMenuView.swift in Sources */,
+				81DEF4E72C8596CE00B01A19 /* FullImageView.swift in Sources */,
 				81D3409A2C64027800D72253 /* CalendarViewModel.swift in Sources */,
 				81F10BE82C5BE7040030631B /* MeetingAppUITests.swift in Sources */,
 				811DC85C2C613C3100C1B01E /* AppTheme.swift in Sources */,
@@ -572,7 +612,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"MeetingApp/Preview Content\"";
 				DEVELOPMENT_TEAM = 3X7X6F638L;
 				ENABLE_PREVIEWS = YES;
@@ -591,7 +631,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = Prototype.MeetingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -609,7 +649,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"MeetingApp/Preview Content\"";
 				DEVELOPMENT_TEAM = 3X7X6F638L;
 				ENABLE_PREVIEWS = YES;
@@ -628,7 +668,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = Prototype.MeetingApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -16,42 +16,53 @@ struct SideMenuView: View {
     @State private var newCategoryName = ""
     @State private var showIconPicker = false
     @State private var selectedIconColor = Color.gray.description
+    @State private var viewOffset: CGFloat = 0
+
     
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 40)
-                .fill(themeManager.currentTheme.backgroundColor)
-                .shadow(color: themeManager.currentTheme.shadowColor, radius: 10, x: 0, y: 5)
-                .onTapGesture {
+            ZStack {
+                RoundedRectangle(cornerRadius: 40)
+                    .fill(themeManager.currentTheme.backgroundColor)
+                    .shadow(color: themeManager.currentTheme.shadowColor, radius: 10, x: 0, y: 5)
+                    .onTapGesture {
+                        withAnimation {
+                            endEditing()
+                        }
+                    }
+
+                VStack(alignment: .leading) {
+                    headerView
+                    Divider()
+                        .background(themeManager.currentTheme.primaryColor)
+                        .padding(.horizontal, 5)
+                        .padding(.bottom, 20)
+
+                    Text("Buckets")
+                        .font(.system(size: 14))
+                        .foregroundColor(themeManager.currentTheme.primaryColor)
+                        .padding(.leading, 20)
+
+                    bucketsList
+                        .padding(.top, 5)
+                    
+                    Spacer()
+                }
+                .padding()
+                .offset(y: viewOffset) // Apply the custom offset
+                .animation(.easeInOut)
+                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
                     withAnimation {
-                        endEditing()
+                        viewOffset = -200 // Adjust this value as needed
                     }
                 }
-
-            VStack(alignment: .leading) {
-                headerView
-                Divider()
-                    .background(themeManager.currentTheme.primaryColor)
-                    .padding(.horizontal, 5)
-                    .padding(.bottom, 20)
-
-                Text("Buckets")
-                    .font(.system(size: 14))
-                    .foregroundColor(themeManager.currentTheme.primaryColor)
-                    .padding(.leading, 20)
-
-                bucketsList
-                    .padding(.top, 5)
-                
-                Spacer()
+                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                    withAnimation {
+                        viewOffset = 0
+                    }
+                }
             }
-            .padding()
+            .edgesIgnoringSafeArea(.vertical)
         }
-        .dismissKeyboardOnSwipeDown {
-            endEditing()
-        }
-        .edgesIgnoringSafeArea(.vertical)
-    }
 
     private var headerView: some View {
         HStack {

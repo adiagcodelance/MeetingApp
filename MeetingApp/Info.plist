@@ -2,34 +2,35 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleIcons</key>
-    <dict>
-        <key>CFBundleAlternateIcons</key>
-        <dict>
-            <key>AppIcon-Dark</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                    <string>AppIcon-Dark</string>
-                </array>
-                <key>UIPrerenderedIcon</key>
-                <true/>
-            </dict>
-            <key>AppIcon-Light</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                    <string>AppIcon-Light</string>
-                </array>
-                <key>UIPrerenderedIcon</key>
-                <true/>
-            </dict>
-        </dict>
-    </dict>
-
-    <!-- Calendar Usage Description -->
-    <key>NSCalendarsUsageDescription</key>
-    <string>This app requires access to your calendar to display and manage events.</string>
-
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+			<key>AppIcon-Dark</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>AppIcon-Dark</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<true/>
+			</dict>
+			<key>AppIcon-Light</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>AppIcon-Light</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This app requires access to your calendar to display and manage events.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to your photos to add images.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to your camera to take and add images.</string>
 </dict>
 </plist>
